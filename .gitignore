@@ -1,3 +1,9 @@
+# Claude Code 관련 파일
+.claude/
+CLAUDE.md
+CLAUDE*.md
+claude-*.md
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -205,3 +211,45 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# 프로젝트 특화 설정
+# 오디오 데이터 디렉토리
+src/
+dest/
+samples/
+audio_data/
+
+# 오디오 파일
+*.wav
+*.mp3
+*.flac
+*.ogg
+*.m4a
+*.aac
+
+# AI 모델 파일
+*.pth
+*.pt
+*.onnx
+*.pb
+*.h5
+*.tflite
+models/
+checkpoints/
+
+# 임시 파일
+tmp/
+temp/
+*.tmp
+cache/
+
+# 설정 파일
+config.local.yml
+config.local.json
+
+# 출력 파일
+output/
+results/
+
+# Jupyter Notebooks
+*.ipynb
