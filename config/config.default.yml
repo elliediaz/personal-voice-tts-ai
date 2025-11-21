@@ -1,0 +1,100 @@
+# Personal Voice TTS AI - Default Configuration
+
+# Audio Processing Parameters
+audio:
+  # 기본 샘플링 레이트 (Hz)
+  default_sample_rate: 22050
+
+  # 기본 채널 수 (1: 모노, 2: 스테레오)
+  default_channels: 1
+
+  # 오디오 정규화 여부
+  normalize: true
+
+  # 지원하는 오디오 포맷
+  supported_formats:
+    - wav
+    - mp3
+    - flac
+    - ogg
+    - m4a
+
+  # 분석 파라미터
+  analysis:
+    # FFT 윈도우 크기
+    n_fft: 2048
+
+    # 홉 길이 (샘플)
+    hop_length: 512
+
+    # 윈도우 함수 타입
+    window: hann
+
+    # 멜 필터뱅크 수
+    n_mels: 128
+
+    # MFCC 계수 개수
+    n_mfcc: 13
+
+    # 주파수 범위 (Hz)
+    fmin: 0
+    fmax: 8000
+
+# Output Settings
+output:
+  # 기본 출력 디렉토리
+  default_dir: ./output
+
+  # 기본 출력 포맷
+  default_format: wav
+
+  # 출력 품질 (1-10)
+  quality: 8
+
+  # 메타데이터 포함 여부
+  include_metadata: true
+
+# Logging Configuration
+logging:
+  # 로그 레벨 (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+  level: INFO
+
+  # 로그 파일 경로
+  file: ./logs/app.log
+
+  # 콘솔 출력 여부
+  console: true
+
+  # 로그 포맷
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+  # 날짜 포맷
+  date_format: "%Y-%m-%d %H:%M:%S"
+
+# Performance Settings
+performance:
+  # 병렬 처리 워커 수 (0: 자동 감지)
+  num_workers: 0
+
+  # 캐시 사용 여부
+  use_cache: true
+
+  # 캐시 디렉토리
+  cache_dir: ./cache
+
+  # 최대 메모리 사용량 (MB, 0: 제한 없음)
+  max_memory_mb: 0
+
+# Visualization Settings
+visualization:
+  # 기본 DPI
+  dpi: 100
+
+  # 그래프 크기 (인치)
+  figure_size: [12, 6]
+
+  # 컬러맵
+  colormap: viridis
+
+  # 폰트 크기
+  font_size: 10

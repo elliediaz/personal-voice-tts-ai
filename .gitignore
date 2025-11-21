@@ -253,3 +253,6 @@ results/
 
 # Jupyter Notebooks
 *.ipynb
+
+# Logs
+logs/
