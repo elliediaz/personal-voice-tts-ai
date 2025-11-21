@@ -1,0 +1,78 @@
+# Similarity Detection Configuration
+
+# Common Similarity Parameters
+similarity:
+  # Global thresholds
+  similarity_threshold: 0.7      # 최소 유사도 점수 (0.0 ~ 1.0)
+  confidence_threshold: 0.5      # 최소 신뢰도 점수 (0.0 ~ 1.0)
+
+  # Segment constraints
+  segment_min_length: 0.1        # 최소 세그먼트 길이 (초)
+  segment_max_length: 10.0       # 최대 세그먼트 길이 (초)
+
+  # Sampling unit configurations
+  frame_length: 2048             # 분석 프레임 크기
+  hop_length: 512                # 홉 길이 (스텝 크기)
+  window_type: hann              # 윈도우 함수 (hann, hamming, blackman 등)
+  overlap: 0.5                   # 오버랩 비율 (0.0 ~ 1.0)
+
+# MFCC Algorithm
+mfcc:
+  n_mfcc: 13                     # MFCC 계수 개수
+  n_fft: 2048                    # FFT 윈도우 크기
+  hop_length: 512                # 홉 길이
+  window: hann                   # 윈도우 함수
+  distance_metric: euclidean     # 거리 메트릭 (euclidean, cosine, correlation)
+  use_dtw: false                 # DTW 사용 여부
+  use_delta: false               # Delta MFCC 사용 여부
+  use_delta_delta: false         # Delta-Delta MFCC 사용 여부
+  similarity_threshold: 0.7
+
+# Spectral Algorithm
+spectral:
+  n_fft: 2048
+  hop_length: 512
+  centroid_weight: 0.3           # 스펙트럼 중심 가중치
+  rolloff_weight: 0.3            # 스펙트럼 롤오프 가중치
+  contrast_weight: 0.2           # 스펙트럼 대비 가중치
+  bandwidth_weight: 0.2          # 스펙트럼 대역폭 가중치
+  similarity_threshold: 0.7
+
+# Energy Algorithm
+energy:
+  frame_length: 2048
+  hop_length: 512
+  normalize_energy: true         # 에너지 정규화 여부
+  similarity_threshold: 0.7
+
+# Rhythm Algorithm
+rhythm:
+  hop_length: 512
+  use_tempo: true                # 템포 특징 사용 여부
+  use_onset: true                # 온셋 특징 사용 여부
+  similarity_threshold: 0.6
+
+# Random Matcher (Baseline)
+random:
+  seed: 42                       # 랜덤 시드
+  weighted: false                # 가중치 랜덤 사용 여부
+  similarity_threshold: 0.5
+
+# Segment Matching
+segment_matching:
+  overlap_threshold: 0.5         # 오버랩 제거 임계값
+  min_segment_gap: 0.1           # 최소 세그먼트 간격 (초)
+  ranking_method: similarity     # 순위화 방법 (similarity, confidence, combined)
+
+# Ensemble Methods
+ensemble:
+  default_algorithms:            # 기본 앙상블 알고리즘
+    - mfcc
+    - spectral
+    - energy
+  default_weights:               # 기본 가중치 (null인 경우 균등)
+    - 0.4
+    - 0.4
+    - 0.2
+  voting_method: weighted_average  # 투표 방법 (weighted_average, max, min)
+  time_tolerance: 0.5            # 세그먼트 그룹화 시간 허용 오차 (초)
