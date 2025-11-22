@@ -252,7 +252,7 @@ stages:
 - [x] Phase 5: TTS 통합
 - [x] Phase 6: 배치 처리
 - [x] Phase 7: GUI 구현
-- [ ] Phase 8: 최적화 및 문서화
+- [x] Phase 8: 최적화 및 문서화
 
 ## 기여 방법
 
@@ -283,7 +283,25 @@ stages:
 
 ## 변경 이력
 
-### v0.7.0 (진행 중)
+### v0.8.0 (현재 버전)
+- 최적화 및 문서화 완료
+  - setup.py 및 pyproject.toml (표준 Python 패키징)
+  - 콘솔 스크립트 엔트리포인트 (pvtts-* 명령어)
+  - PyPI 배포 준비 완료
+  - LICENSE 파일 (MIT)
+  - .gitignore 및 MANIFEST.in
+  - 코드 품질 도구 설정 (black, flake8, mypy)
+  - pytest 설정 및 커버리지
+  - 상세한 설치 가이드 (docs/installation.md)
+  - 빠른 시작 가이드 (docs/quickstart.md)
+  - 예제 코드 (examples/)
+    - basic_synthesis.py: 기본 합성
+    - tts_collage.py: TTS-to-Collage
+    - batch_processing.py: 배치 처리
+  - 선택적 의존성 (ai, tts, gui, dev, all)
+  - 프로덕션 준비 완료
+
+### v0.7.0
 - GUI 구현
   - PyQt6 기반 메인 애플리케이션
   - 오디오 플레이어 위젯 (재생, 일시정지, 정지, 볼륨, 시크)
