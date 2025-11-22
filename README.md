@@ -249,7 +249,7 @@ stages:
 - [x] Phase 2: 전통적인 유사도 검출
 - [x] Phase 3: AI 기반 유사도 검출
 - [x] Phase 4: 오디오 합성 엔진
-- [ ] Phase 5: TTS 통합
+- [x] Phase 5: TTS 통합
 - [ ] Phase 6: 배치 처리
 - [ ] Phase 7: GUI 구현
 - [ ] Phase 8: 최적화 및 문서화
@@ -283,7 +283,16 @@ stages:
 
 ## 변경 이력
 
-### v0.4.0 (진행 중)
+### v0.5.0 (진행 중)
+- TTS 통합 구현
+  - 3가지 TTS 백엔드 (gTTS, pyttsx3, Edge-TTS)
+  - 텍스트 전처리 (숫자/약어 변환, 문장 분리)
+  - TTS-to-Collage 파이프라인 (텍스트 → TTS → 콜라주)
+  - 배치 TTS 처리
+  - TTS CLI (speak, collage, batch 명령어)
+  - 폴백 전략 및 오류 처리
+
+### v0.4.0
 - 오디오 합성 엔진 구현
   - 세그먼트 추출 및 검증
   - 4가지 블렌딩 알고리즘 (linear, logarithmic, equal_power, spectral)
