@@ -1,0 +1,96 @@
+# Audio-to-Audio Matching Workflow
+# 오디오 간 매칭 워크플로
+
+name: audio_matching
+
+description: |
+  타겟 오디오와 유사한 세그먼트를 소스 오디오 파일들에서 찾아
+  콜라주 음성을 생성합니다.
+
+# 파이프라인 스테이지
+stages:
+  - name: audio_loading
+    enabled: true
+    description: 오디오 파일 로딩
+    params:
+      normalize: true
+      resample_rate: null
+
+  - name: feature_extraction
+    enabled: true
+    description: 오디오 특징 추출
+    params:
+      method: mfcc
+      n_mfcc: 13
+      n_fft: 2048
+      hop_length: 512
+
+  - name: similarity_detection
+    enabled: true
+    description: 유사도 검출
+    params:
+      algorithm: hybrid
+      threshold: 0.6
+      top_k: 3
+
+  - name: audio_synthesis
+    enabled: true
+    description: 오디오 합성
+    params:
+      blend_algorithm: equal_power
+      crossfade_duration: 0.05
+      adjust_pitch: true
+      adjust_tempo: true
+
+  - name: quality_enhancement
+    enabled: true
+    description: 품질 향상
+    params:
+      noise_reduction: true
+      spectral_smoothing: true
+      enhance_quality: true
+
+  - name: output_saving
+    enabled: true
+    description: 결과 저장
+    params:
+      format: wav
+      save_metadata: true
+
+# 입력 요구사항
+inputs:
+  - name: target_file
+    type: path
+    required: true
+    description: 타겟 오디오 파일 경로
+
+  - name: source_files
+    type: list
+    required: true
+    description: 소스 오디오 파일 경로 리스트
+
+  - name: output_path
+    type: path
+    required: true
+    description: 출력 파일 경로
+
+# 출력
+outputs:
+  - name: audio_file
+    type: path
+    description: 생성된 오디오 파일
+
+  - name: similarity_scores
+    type: list
+    description: 유사도 점수 리스트
+
+  - name: metadata
+    type: dict
+    description: 처리 메타데이터
+
+# 배치 처리 설정
+batch:
+  enabled: true
+  max_workers: 2
+  continue_on_error: true
+  show_progress: true

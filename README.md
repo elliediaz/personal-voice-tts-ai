@@ -250,7 +250,7 @@ stages:
 - [x] Phase 3: AI 기반 유사도 검출
 - [x] Phase 4: 오디오 합성 엔진
 - [x] Phase 5: TTS 통합
-- [ ] Phase 6: 배치 처리
+- [x] Phase 6: 배치 처리
 - [ ] Phase 7: GUI 구현
 - [ ] Phase 8: 최적화 및 문서화
 
@@ -283,7 +283,20 @@ stages:
 
 ## 변경 이력
 
-### v0.5.0 (진행 중)
+### v0.6.0 (진행 중)
+- 배치 처리 및 워크플로 자동화 구현
+  - BatchProcessor (다중 작업 병렬 처리)
+  - JobQueue (작업 큐 및 의존성 관리)
+  - ProgressTracker (실시간 진행률 추적)
+  - ErrorHandler (오류 처리 및 재시도)
+  - ResultAggregator (결과 집계 및 요약)
+  - Pipeline (파이프라인 스테이지 구성)
+  - 워크플로 템플릿 (TTS Collage, Audio Matching, Batch Synthesis)
+  - 배치 처리 CLI (run, list-workflows, benchmark 명령어)
+  - 병렬 처리 지원 (프로세스/스레드 선택)
+  - 포괄적인 테스트 스위트
+
+### v0.5.0
 - TTS 통합 구현
   - 3가지 TTS 백엔드 (gTTS, pyttsx3, Edge-TTS)
   - 텍스트 전처리 (숫자/약어 변환, 문장 분리)

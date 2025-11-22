@@ -1,0 +1,92 @@
+# Batch Synthesis Workflow
+# 배치 오디오 합성 워크플로
+
+name: batch_synthesis
+
+description: |
+  여러 텍스트 또는 오디오 파일을 일괄 처리하여
+  콜라주 음성을 생성합니다.
+
+# 파이프라인 스테이지
+stages:
+  - name: input_loading
+    enabled: true
+    description: 입력 파일 로딩
+    params:
+      validate_files: true
+      skip_invalid: true
+
+  - name: preprocessing
+    enabled: true
+    description: 전처리
+    params:
+      text_preprocessing: true
+      audio_normalization: true
+
+  - name: batch_processing
+    enabled: true
+    description: 배치 처리
+    params:
+      max_workers: 4
+      use_processes: false
+      continue_on_error: true
+
+  - name: result_aggregation
+    enabled: true
+    description: 결과 집계
+    params:
+      generate_summary: true
+      save_report: true
+
+  - name: output_saving
+    enabled: true
+    description: 결과 저장
+    params:
+      output_format: wav
+      create_manifest: true
+
+# 입력 요구사항
+inputs:
+  - name: input_file
+    type: path
+    required: true
+    description: 입력 텍스트/경로 파일
+
+  - name: source_files
+    type: list
+    required: true
+    description: 소스 오디오 파일 경로 리스트
+
+  - name: output_dir
+    type: path
+    required: true
+    description: 출력 디렉토리
+
+# 출력
+outputs:
+  - name: audio_files
+    type: list
+    description: 생성된 오디오 파일 리스트
+
+  - name: summary
+    type: dict
+    description: 처리 요약 정보
+
+  - name: manifest
+    type: path
+    description: 매니페스트 파일 경로
+
+# 배치 처리 설정
+batch:
+  enabled: true
+  max_workers: 4
+  use_processes: false
+  continue_on_error: true
+  show_progress: true
+  output_prefix: output
+
+# 성능 설정
+performance:
+  chunk_size: 10
+  timeout: 300
+  memory_limit: null
