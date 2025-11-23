@@ -1,0 +1,175 @@
+# GUI Configuration
+# GUI 설정
+
+# 윈도우 설정
+window:
+  # 기본 크기
+  default_width: 1200
+  default_height: 800
+
+  # 최소 크기
+  min_width: 800
+  min_height: 600
+
+  # 테마
+  theme: light  # light, dark
+
+# 오디오 재생
+audio:
+  # 기본 볼륨 (0.0~1.0)
+  default_volume: 0.5
+
+  # 오디오 장치
+  output_device: default
+
+  # 재생 품질
+  quality:
+    sample_rate: 22050
+    bit_depth: 16
+
+# 시각화
+visualization:
+  # 파형
+  waveform:
+    max_points: 10000  # 성능 최적화를 위한 최대 포인트 수
+    line_width: 0.5
+    color: blue
+
+  # 스펙트로그램
+  spectrogram:
+    n_fft: 2048
+    hop_length: 512
+    colormap: viridis
+    show_colorbar: true
+
+  # 유사도 매트릭스
+  similarity:
+    colormap: hot
+    show_values: false
+
+# 파일 브라우저
+file_browser:
+  # 기본 디렉토리
+  default_directory: ~
+
+  # 최근 파일 개수
+  recent_files_count: 10
+
+  # 지원하는 오디오 포맷
+  audio_formats:
+    - wav
+    - mp3
+    - flac
+    - ogg
+
+# 알고리즘 기본값
+algorithm:
+  # 유사도 알고리즘
+  default_similarity: mfcc  # mfcc, spectral, hybrid, ai_embedding
+
+  # 유사도 임계값 (0.0~1.0)
+  similarity_threshold: 0.5
+
+  # Top-K 매칭
+  top_k: 1
+
+# 합성 설정
+synthesis:
+  # 크로스페이드 길이 (초)
+  crossfade_duration: 0.05
+
+  # 블렌딩 알고리즘
+  blend_algorithm: equal_power  # linear, logarithmic, equal_power, spectral
+
+  # 자동 조정
+  auto_pitch: true
+  auto_tempo: true
+  match_prosody: true
+  enhance_quality: true
+
+# TTS 설정
+tts:
+  # 기본 백엔드
+  default_backend: gtts  # gtts, pyttsx3, edge-tts
+
+  # 기본 언어
+  default_language: ko
+
+  # 말하기 속도
+  speech_rate: 1.0
+
+# 배치 처리
+batch:
+  # 최대 워커 수
+  max_workers: 4
+
+  # 프로세스 사용 여부
+  use_processes: false
+
+  # 오류 시 계속 진행
+  continue_on_error: true
+
+  # 진행률 표시
+  show_progress: true
+
+# 성능
+performance:
+  # GPU 사용
+  use_gpu: false
+
+  # GPU 디바이스 ID
+  gpu_device: 0
+
+  # 캐싱
+  cache_enabled: true
+
+  # 캐시 디렉토리
+  cache_dir: ~/.cache/personal-voice-tts-ai
+
+# 로깅
+logging:
+  # 로깅 레벨
+  level: INFO  # DEBUG, INFO, WARNING, ERROR
+
+  # 콘솔 출력
+  console: true
+
+  # 파일 저장
+  file: ~/.cache/personal-voice-tts-ai/logs/gui.log
+
+  # 최대 로그 파일 크기 (MB)
+  max_file_size: 10
+
+  # 로그 파일 개수
+  backup_count: 5
+
+# UI 업데이트
+ui:
+  # 진행률 업데이트 간격 (밀리초)
+  progress_update_interval: 100
+
+  # 자동 저장
+  auto_save: true
+
+  # 자동 저장 간격 (초)
+  auto_save_interval: 300
+
+# 키보드 단축키
+shortcuts:
+  # 파일
+  open: Ctrl+O
+  save: Ctrl+S
+  quit: Ctrl+Q
+
+  # 편집
+  settings: Ctrl+,
+
+  # 재생
+  play_pause: Space
+  stop: Ctrl+.
+
+  # 도움말
+  help: F1
+
+# 언어
+language: ko  # ko, en

@@ -1,0 +1,85 @@
+# TTS-to-Collage Workflow
+# 텍스트를 콜라주 음성으로 변환하는 워크플로
+
+name: tts_collage
+
+description: |
+  텍스트 입력을 받아 TTS를 생성하고,
+  소스 오디오 파일들과 매칭하여 콜라주 음성을 생성합니다.
+
+# 파이프라인 스테이지
+stages:
+  - name: text_preprocessing
+    enabled: true
+    description: 텍스트 전처리 (정규화, 숫자 변환 등)
+    params:
+      normalize_whitespace: true
+      numbers_to_words: true
+      expand_abbreviations: true
+
+  - name: tts_generation
+    enabled: true
+    description: TTS 음성 생성
+    params:
+      backend: gtts
+      language: ko
+      cache_enabled: true
+
+  - name: similarity_detection
+    enabled: true
+    description: 유사도 검출
+    params:
+      algorithm: mfcc
+      threshold: 0.5
+      top_k: 1
+
+  - name: audio_synthesis
+    enabled: true
+    description: 오디오 합성
+    params:
+      adjust_pitch: true
+      adjust_tempo: true
+      match_prosody: true
+      enhance_quality: true
+
+  - name: output_saving
+    enabled: true
+    description: 결과 저장
+    params:
+      format: wav
+      sample_rate: null
+      save_metadata: true
+
+# 입력 요구사항
+inputs:
+  - name: text
+    type: string
+    required: true
+    description: 변환할 텍스트
+
+  - name: source_files
+    type: list
+    required: true
+    description: 소스 오디오 파일 경로 리스트
+
+  - name: output_path
+    type: path
+    required: true
+    description: 출력 파일 경로
+
+# 출력
+outputs:
+  - name: audio_file
+    type: path
+    description: 생성된 오디오 파일
+
+  - name: metadata
+    type: dict
+    description: 메타데이터 (유사도, 소스 파일 등)
+
+# 배치 처리 설정
+batch:
+  enabled: true
+  max_workers: 4
+  continue_on_error: true
+  show_progress: true

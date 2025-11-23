@@ -1,0 +1,32 @@
+# AI-Based Similarity Detection Dependencies
+# Phase 3: AI 기반 유사도 검출을 위한 의존성
+
+# Deep Learning Framework
+torch>=2.0.0
+torchaudio>=2.0.0
+
+# Pretrained Models
+transformers>=4.30.0
+sentence-transformers>=2.2.0
+
+# Efficient Similarity Search
+faiss-cpu>=1.7.4  # GPU 버전 필요시 faiss-gpu로 변경
+
+# ONNX Runtime (최적화된 추론)
+onnxruntime>=1.15.0
+# onnxruntime-gpu>=1.15.0  # GPU 버전
+
+# Audio Processing for AI
+torchaudio>=2.0.0
+audiomentations>=0.30.0
+
+# Visualization
+umap-learn>=0.5.3  # UMAP for embedding visualization
+scikit-learn>=1.3.0  # t-SNE and other utilities
+
+# Model Hub
+huggingface-hub>=0.16.0
+
+# Optional: Advanced Audio Models
+# openl3>=0.4.1  # OpenL3 embeddings
+# panns-inference>=0.1.0  # PANNs (Pre-trained Audio Neural Networks)

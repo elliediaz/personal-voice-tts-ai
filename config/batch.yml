@@ -1,0 +1,134 @@
+# Batch Processing Configuration
+# 배치 처리 설정
+
+# 기본 설정
+default:
+  # 최대 워커 수 (null이면 CPU 코어 수)
+  max_workers: null
+
+  # 프로세스 사용 여부 (false면 스레드 사용)
+  use_processes: false
+
+  # 오류 시 계속 진행 여부
+  continue_on_error: true
+
+  # 진행률 표시 여부
+  show_progress: true
+
+# 작업 큐 설정
+queue:
+  # 기본 우선순위
+  default_priority: 0
+
+  # 큐 저장 디렉토리
+  save_dir: ~/.cache/personal-voice-tts-ai/queue
+
+  # 큐 자동 저장
+  auto_save: true
+
+# 오류 처리 설정
+error_handling:
+  # 최대 재시도 횟수
+  max_retries: 3
+
+  # 재시도 간격 (초)
+  retry_delay: 2.0
+
+  # 재시도 전략 (exponential_backoff, fixed_delay, immediate)
+  retry_strategy: exponential_backoff
+
+  # 오류 로그 저장
+  save_error_log: true
+
+  # 오류 로그 디렉토리
+  error_log_dir: ~/.cache/personal-voice-tts-ai/errors
+
+# 결과 저장 설정
+results:
+  # 결과 저장 디렉토리
+  save_dir: ~/.cache/personal-voice-tts-ai/results
+
+  # 자동 저장 형식 (json, csv, both)
+  auto_save_format: json
+
+  # 결과 압축
+  compress: false
+
+# 진행률 추적 설정
+progress:
+  # 프로그레스 바 길이
+  bar_length: 50
+
+  # 업데이트 간격 (초)
+  update_interval: 0.5
+
+  # ETA 표시
+  show_eta: true
+
+# 리소스 관리 설정
+resources:
+  # CPU 사용률 제한 (0.0~1.0, null이면 제한 없음)
+  cpu_limit: null
+
+  # 메모리 제한 (MB, null이면 제한 없음)
+  memory_limit: null
+
+  # GPU 사용
+  use_gpu: false
+
+  # GPU 디바이스 ID
+  gpu_device: 0
+
+# 알림 설정
+notifications:
+  # 알림 활성화
+  enabled: false
+
+  # 완료 알림
+  on_completion: true
+
+  # 오류 알림
+  on_error: true
+
+  # 알림 방법 (console, file, email, webhook)
+  methods:
+    - console
+    - file
+
+# 로깅 설정
+logging:
+  # 로깅 레벨 (DEBUG, INFO, WARNING, ERROR)
+  level: INFO
+
+  # 로그 파일 저장
+  save_to_file: true
+
+  # 로그 파일 경로
+  log_file: ~/.cache/personal-voice-tts-ai/logs/batch.log
+
+  # 콘솔 출력
+  console: true
+
+# 성능 설정
+performance:
+  # 배치 크기
+  batch_size: 10
+
+  # 타임아웃 (초)
+  timeout: 300
+
+  # 캐싱 활성화
+  cache_enabled: true
+
+  # 캐시 디렉토리
+  cache_dir: ~/.cache/personal-voice-tts-ai/cache
+
+  # 비동기 처리
+  async_enabled: false
+
+# 워크플로 템플릿 디렉토리
+workflows:
+  template_dir: config/workflows
+
+  # 기본 워크플로
+  default_workflow: tts_collage

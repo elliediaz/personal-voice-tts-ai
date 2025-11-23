@@ -1,0 +1,127 @@
+# AI Models Configuration
+# AI 기반 유사도 검출을 위한 모델 설정
+
+# 모델 캐시 디렉토리
+cache_dir: ~/.cache/personal-voice-tts-ai/models
+
+# 디바이스 설정 (auto, cuda, cpu)
+device: auto
+
+# 기본 모델 설정
+default_model:
+  name: wav2vec2-base
+  pooling: mean
+  normalize: true
+
+# 지원하는 모델들
+models:
+  wav2vec2-base:
+    huggingface_id: facebook/wav2vec2-base
+    type: wav2vec2
+    embedding_dim: 768
+    description: "기본 Wav2Vec2 모델 (경량)"
+
+  wav2vec2-large:
+    huggingface_id: facebook/wav2vec2-large-960h
+    type: wav2vec2
+    embedding_dim: 1024
+    description: "대형 Wav2Vec2 모델 (고성능)"
+
+  hubert-base:
+    huggingface_id: facebook/hubert-base-ls960
+    type: hubert
+    embedding_dim: 768
+    description: "기본 HuBERT 모델"
+
+  hubert-large:
+    huggingface_id: facebook/hubert-large-ll60k
+    type: hubert
+    embedding_dim: 1024
+    description: "대형 HuBERT 모델 (고성능)"
+
+# 임베딩 추출 설정
+embedding:
+  # 풀링 방법 (mean, max, attention)
+  pooling: mean
+
+  # 임베딩 정규화 여부
+  normalize: true
+
+  # 배치 크기
+  batch_size: 8
+
+# 유사도 검출 설정
+similarity:
+  # 거리 메트릭 (cosine, euclidean)
+  distance_metric: cosine
+
+  # 슬라이딩 윈도우 크기 (초)
+  window_size: 1.0
+
+  # 슬라이딩 윈도우 이동 크기 (초)
+  hop_size: 0.5
+
+  # FAISS 사용 여부 (빠른 검색)
+  use_faiss: false
+
+  # 최소 유사도 임계값
+  similarity_threshold: 0.5
+
+  # 최소 신뢰도 임계값
+  confidence_threshold: 0.5
+
+# 하이브리드 알고리즘 설정
+hybrid:
+  # 전통적 알고리즘 가중치
+  traditional_weight: 0.4
+
+  # AI 알고리즘 가중치
+  ai_weight: 0.6
+
+  # 융합 방법 (weighted_average, max, min, product)
+  fusion_method: weighted_average
+
+  # 전통적 알고리즘 (mfcc, spectral, energy, rhythm)
+  traditional_algorithm: mfcc
+
+  # AI 알고리즘 모델
+  ai_model: wav2vec2-base
+
+# 추론 최적화 설정
+inference:
+  # 혼합 정밀도 (mixed precision) 사용
+  use_mixed_precision: false
+
+  # 모델 웜업 여부
+  warm_up: true
+
+  # 캐싱 전략
+  cache_embeddings: true
+
+  # GPU 메모리 관리
+  gpu_memory_fraction: 0.8
+
+# 메타데이터 출력 설정
+metadata:
+  # 상세 출력 여부
+  verbose: true
+
+  # 주파수 분석 포함 여부
+  include_frequency_analysis: true
+
+  # 출력 형식 (json, yaml)
+  output_format: json
+
+  # 메타데이터 저장 경로
+  save_path: output/metadata
+
+# 성능 설정
+performance:
+  # 멀티프로세싱 워커 수 (0 = CPU 코어 수)
+  num_workers: 0
+
+  # 진행률 표시
+  show_progress: true
+
+  # 로깅 레벨 (DEBUG, INFO, WARNING, ERROR)
+  log_level: INFO

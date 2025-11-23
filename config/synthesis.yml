@@ -1,0 +1,139 @@
+# Synthesis Configuration
+# 오디오 합성 및 콜라주를 위한 설정
+
+# 세그먼트 추출 설정
+extraction:
+  # 페이드 인/아웃 길이 (초)
+  fade_duration: 0.01
+
+  # 최소 세그먼트 길이 (초)
+  min_segment_length: 0.1
+
+  # 세그먼트 정규화 여부
+  normalize: true
+
+# 블렌딩 설정
+blending:
+  # 블렌딩 알고리즘 (linear, logarithmic, equal_power, spectral)
+  algorithm: equal_power
+
+  # 크로스페이드 길이 (초)
+  crossfade_duration: 0.05
+
+# 피치 조정 설정
+pitch:
+  # 피치 조정 방법 (phase_vocoder, time_stretch)
+  method: phase_vocoder
+
+  # 포먼트 보존 여부
+  preserve_formants: true
+
+  # 피치 조정 활성화
+  enabled: true
+
+  # 최대 피치 변화 (반음)
+  max_shift_semitones: 12
+
+# 템포 조정 설정
+tempo:
+  # 피치 보존 여부
+  preserve_pitch: true
+
+  # 템포 조정 활성화
+  enabled: true
+
+  # 최대 템포 비율
+  max_rate: 2.0
+
+# 프로소디 매칭 설정
+prosody:
+  # 피치 매칭 여부
+  match_pitch: true
+
+  # 에너지 매칭 여부
+  match_energy: true
+
+  # 길이 매칭 여부
+  match_duration: true
+
+  # 프로소디 매칭 활성화
+  enabled: true
+
+# 품질 향상 설정
+enhancement:
+  # 노이즈 감소 여부
+  noise_reduction: true
+
+  # 스펙트럼 스무딩 여부
+  spectral_smoothing: true
+
+  # 다이나믹 레인지 압축 여부
+  dynamic_range_compression: false
+
+  # 이퀄라이제이션 여부
+  equalization: false
+
+  # 품질 향상 활성화
+  enabled: true
+
+# 콜라주 엔진 설정
+engine:
+  # 각 소스에서 찾을 매치 수
+  top_k: 1
+
+  # 캐시 사용 여부
+  use_cache: true
+
+  # 최대 캐시 크기
+  cache_size: 100
+
+# 품질 메트릭 설정
+metrics:
+  # SNR 계산 여부
+  compute_snr: true
+
+  # 스펙트럼 거리 계산 여부
+  compute_spectral_distance: true
+
+  # 클리핑 검출 여부
+  detect_clipping: true
+
+  # 무음 검출 여부
+  detect_silence: true
+
+  # 클리핑 임계값
+  clipping_threshold: 0.99
+
+  # 무음 임계값 (dB)
+  silence_threshold_db: -40
+
+# 출력 설정
+output:
+  # 기본 출력 형식 (wav, flac, mp3, ogg)
+  format: wav
+
+  # 샘플링 레이트 (null이면 소스와 동일)
+  sample_rate: null
+
+  # 비트레이트 (MP3 등에 사용)
+  bitrate: "320k"
+
+  # 메타데이터 저장 여부
+  save_metadata: true
+
+  # 메타데이터 출력 형식 (json, yaml)
+  metadata_format: json
+
+# 성능 설정
+performance:
+  # 멀티프로세싱 여부
+  multiprocessing: false
+
+  # 워커 수 (0 = CPU 코어 수)
+  num_workers: 0
+
+  # 진행률 표시 여부
+  show_progress: true
+
+  # 로깅 레벨 (DEBUG, INFO, WARNING, ERROR)
+  log_level: INFO
