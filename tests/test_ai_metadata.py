@@ -6,6 +6,9 @@ import pytest
 import tempfile
 from pathlib import Path
 
+# transformers 패키지가 없으면 테스트 건너뛰기
+pytest.importorskip("transformers", reason="transformers 패키지가 설치되지 않음")
+
 from core.ai.metadata import AIMetadata
 
 

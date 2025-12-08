@@ -5,7 +5,7 @@ Quality Metrics
 """
 
 import logging
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 import numpy as np
 import librosa

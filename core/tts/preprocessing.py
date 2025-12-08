@@ -76,7 +76,8 @@ class TextPreprocessor:
                     # 100 이상은 그대로 (간단한 구현)
                     return str(num)
 
-            text = re.sub(r'\b\d+\b', korean_number, text)
+            # 한국어에서는 \b가 제대로 작동하지 않으므로 숫자 패턴만 사용
+            text = re.sub(r'\d+', korean_number, text)
 
         return text
 

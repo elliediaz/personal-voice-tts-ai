@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Voice TTS AI</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Personal Voice TTS AI</h1>
+            <p class="subtitle">음성 콜라주 및 합성 기반 TTS 시스템</p>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab-btn active" data-tab="analyze">오디오 분석</button>
+            <button class="tab-btn" data-tab="preprocess">텍스트 전처리</button>
+            <button class="tab-btn" data-tab="info">서비스 정보</button>
+        </nav>
+
+        <main>
+            <!-- 오디오 분석 탭 -->
+            <section id="analyze" class="tab-content active">
+                <h2>오디오 파일 분석</h2>
+                <form id="analyze-form" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="audio-file">오디오 파일 선택</label>
+                        <input type="file" id="audio-file" name="file" accept=".wav,.mp3,.flac,.ogg,.m4a" required>
+                        <small>지원 형식: WAV, MP3, FLAC, OGG, M4A</small>
+                    </div>
+                    <button type="submit" class="btn-primary">분석 시작</button>
+                </form>
+                <div id="analyze-result" class="result-box"></div>
+            </section>
+
+            <!-- 텍스트 전처리 탭 -->
+            <section id="preprocess" class="tab-content">
+                <h2>텍스트 전처리</h2>
+                <form id="preprocess-form">
+                    <div class="form-group">
+                        <label for="input-text">입력 텍스트</label>
+                        <textarea id="input-text" name="text" rows="4" required placeholder="전처리할 텍스트를 입력하세요..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="language">언어</label>
+                        <select id="language" name="language">
+                            <option value="ko" selected>한국어</option>
+                            <option value="en">영어</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-primary">전처리 실행</button>
+                </form>
+                <div id="preprocess-result" class="result-box"></div>
+            </section>
+
+            <!-- 서비스 정보 탭 -->
+            <section id="info" class="tab-content">
+                <h2>서비스 정보</h2>
+                <div id="info-content" class="info-box">
+                    <p>로딩 중...</p>
+                </div>
+                <h3>사용 가능한 알고리즘</h3>
+                <div id="algorithms-list" class="algorithms-box">
+                    <p>로딩 중...</p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Personal Voice TTS AI v0.1.0</p>
+        </footer>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

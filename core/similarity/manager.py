@@ -304,6 +304,7 @@ class AlgorithmManager:
         source_audio: Optional[np.ndarray] = None,
         target_sr: int = 22050,
         source_sr: int = 22050,
+        test_duration: float = 3.0,
     ) -> Dict[str, Dict[str, Any]]:
         """
         알고리즘들의 성능을 벤치마크합니다.
@@ -314,6 +315,7 @@ class AlgorithmManager:
             source_audio: 테스트용 소스 오디오
             target_sr: 타겟 샘플링 레이트
             source_sr: 소스 샘플링 레이트
+            test_duration: 테스트용 오디오 생성 시 사용할 길이 (초)
 
         Returns:
             Dict[str, Dict[str, Any]]: 벤치마크 결과
@@ -323,7 +325,7 @@ class AlgorithmManager:
 
         # 테스트 오디오 생성 (제공되지 않은 경우)
         if target_audio is None or source_audio is None:
-            duration = 3.0  # 3초
+            duration = test_duration
             target_audio = np.random.randn(int(duration * target_sr)).astype(np.float32)
             source_audio = np.random.randn(int(duration * 5 * source_sr)).astype(np.float32)
 

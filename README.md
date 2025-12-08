@@ -45,6 +45,12 @@
 - 파라미터 조정 패널
 - 배치 작업 관리
 
+### 7. 웹 서비스 API
+- FastAPI 기반 RESTful API
+- 오디오 분석 및 텍스트 전처리 엔드포인트
+- 파일 업로드/다운로드 지원
+- 웹 기반 사용자 인터페이스
+
 ## 시스템 요구사항
 
 - Python 3.9 이상
@@ -150,6 +156,44 @@ python -m cli.batch monitor
 python -m gui.app
 ```
 
+### 7. 웹 서비스 실행
+
+```bash
+# 실행 스크립트 사용 (권장)
+./run.sh              # Linux/macOS
+run.bat               # Windows
+python run.py         # 크로스플랫폼
+
+# 또는 직접 실행
+python -m uvicorn web.app:app --host 0.0.0.0 --port 8000 --reload
+
+# 브라우저에서 접속: http://localhost:8000
+```
+
+## 실행 스크립트 사용법
+
+프로젝트는 크로스플랫폼 실행 스크립트를 제공합니다:
+
+```bash
+# Linux/macOS
+./run.sh web          # 웹 서버 실행 (기본값)
+./run.sh cli basic info audio.wav  # CLI 도구 실행
+./run.sh test         # 테스트 실행
+./run.sh install      # 의존성 설치
+
+# Windows
+run.bat web
+run.bat cli basic info audio.wav
+run.bat test
+run.bat install
+
+# Python (모든 플랫폼)
+python run.py web --port 3000
+python run.py cli basic info audio.wav
+python run.py test
+python run.py install --extras all
+```
+
 ## 프로젝트 구조
 
 ```
@@ -165,6 +209,9 @@ personal-voice-tts-ai/
 │   ├── traditional/        # 전통적 방법
 │   ├── ai_based/          # AI 기반 방법
 │   └── random/            # 랜덤 매칭
+├── web/                    # 웹 서비스
+│   ├── static/            # 정적 파일 (CSS, JS)
+│   └── templates/         # HTML 템플릿
 ├── utils/                  # 유틸리티 함수
 ├── gui/                    # GUI 구현
 │   ├── widgets/           # UI 위젯
@@ -174,7 +221,10 @@ personal-voice-tts-ai/
 ├── config/                 # 설정 파일
 ├── tests/                  # 테스트 스위트
 ├── docs/                   # 문서
-└── examples/              # 예제 및 튜토리얼
+├── examples/              # 예제 및 튜토리얼
+├── run.sh                 # 실행 스크립트 (Linux/macOS)
+├── run.bat                # 실행 스크립트 (Windows)
+└── run.py                 # 실행 스크립트 (크로스플랫폼)
 ```
 
 ## 설정
@@ -283,7 +333,17 @@ stages:
 
 ## 변경 이력
 
-### v0.8.0 (현재 버전)
+### v0.9.0 (현재 버전)
+- 웹 서비스 및 크로스플랫폼 지원
+  - FastAPI 기반 웹 API 구현
+  - RESTful 엔드포인트 (오디오 분석, 텍스트 전처리, 파일 관리)
+  - 웹 기반 사용자 인터페이스
+  - 크로스플랫폼 실행 스크립트 (run.sh, run.bat, run.py)
+  - 의존성 업데이트 (pydantic v2, numpy v2 지원)
+  - 조건부 AI 모듈 로딩 (transformers 선택적)
+  - librosa 최신 버전 호환성 개선
+
+### v0.8.0
 - 최적화 및 문서화 완료
   - setup.py 및 pyproject.toml (표준 Python 패키징)
   - 콘솔 스크립트 엔트리포인트 (pvtts-* 명령어)
