@@ -172,20 +172,37 @@ python -m uvicorn web.app:app --host 0.0.0.0 --port 8000 --reload
 
 ## 실행 스크립트 사용법
 
-프로젝트는 크로스플랫폼 실행 스크립트를 제공합니다:
+프로젝트는 크로스플랫폼 실행 스크립트를 제공합니다. 모든 스크립트는 대화형 메뉴, 색상 출력, 자동 가상환경 감지를 지원합니다.
+
+### 대화형 메뉴 모드
+
+```bash
+# 인자 없이 실행하면 대화형 메뉴 표시
+./run.sh              # Linux/macOS
+run.bat               # Windows
+```
+
+### 명령어 직접 실행
 
 ```bash
 # Linux/macOS
-./run.sh web          # 웹 서버 실행 (기본값)
-./run.sh cli basic info audio.wav  # CLI 도구 실행
-./run.sh test         # 테스트 실행
-./run.sh install      # 의존성 설치
+./run.sh web                       # 웹 서버 실행 (기본 포트 8000)
+./run.sh web --port 3000           # 포트 3000으로 웹 서버 실행
+./run.sh gui                       # GUI 애플리케이션 실행
+./run.sh cli basic info audio.wav  # CLI 오디오 정보 조회
+./run.sh test -v                   # 상세 테스트 실행
+./run.sh test -c                   # 커버리지 테스트 실행
+./run.sh install all               # 모든 의존성 설치
+./run.sh clean                     # 캐시 및 빌드 파일 정리
 
 # Windows
 run.bat web
+run.bat web --port 3000
+run.bat gui
 run.bat cli basic info audio.wav
-run.bat test
-run.bat install
+run.bat test -v
+run.bat install all
+run.bat clean
 
 # Python (모든 플랫폼)
 python run.py web --port 3000
@@ -193,6 +210,24 @@ python run.py cli basic info audio.wav
 python run.py test
 python run.py install --extras all
 ```
+
+### 환경변수
+
+```bash
+# Linux/macOS
+PVTTS_PORT=3000 ./run.sh web       # 환경변수로 포트 설정
+PVTTS_DEBUG=1 ./run.sh web         # 디버그 모드 활성화
+
+# Windows
+set PVTTS_PORT=3000
+run.bat web
+```
+
+| 환경변수 | 설명 | 기본값 |
+|---------|------|--------|
+| `PVTTS_HOST` | 웹 서버 호스트 | 0.0.0.0 |
+| `PVTTS_PORT` | 웹 서버 포트 | 8000 |
+| `PVTTS_DEBUG` | 디버그 모드 (1로 활성화) | 0 |
 
 ## 프로젝트 구조
 
@@ -334,6 +369,16 @@ stages:
 ## 변경 이력
 
 ### v0.9.0 (현재 버전)
+- 향상된 실행 스크립트
+  - 대화형 메뉴 시스템 (번호 선택 방식)
+  - ASCII 아트 배너 및 색상 출력
+  - 자동 가상환경 감지 및 활성화
+  - Python 버전 검증 (3.9+ 필수)
+  - 환경변수 지원 (PVTTS_HOST, PVTTS_PORT, PVTTS_DEBUG)
+  - CLI 서브메뉴, 테스트 옵션 메뉴, 설치 옵션 메뉴
+  - 캐시 및 빌드 파일 정리 기능
+  - 시그널 트랩 (Linux/macOS)
+- 버전 정보 통일 (0.9.0)
 - 웹 서비스 및 크로스플랫폼 지원
   - FastAPI 기반 웹 API 구현
   - RESTful 엔드포인트 (오디오 분석, 텍스트 전처리, 파일 관리)

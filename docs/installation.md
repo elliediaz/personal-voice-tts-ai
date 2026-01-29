@@ -79,7 +79,72 @@ pvtts-tts --help
 
 # Python에서 확인
 python -c "import core; print('설치 성공!')"
+
+# 버전 확인
+python -c "import core; print(core.__version__)"
 ```
+
+## 플랫폼별 실행 방법
+
+프로젝트는 향상된 실행 스크립트를 제공합니다. 모든 스크립트는 대화형 메뉴, 색상 출력, 자동 가상환경 감지를 지원합니다.
+
+### Linux/macOS
+
+```bash
+# 실행 권한 부여 (최초 1회)
+chmod +x run.sh
+
+# 대화형 메뉴 (권장)
+./run.sh
+
+# 직접 실행
+./run.sh web                       # 웹 서버
+./run.sh gui                       # GUI
+./run.sh cli basic info audio.wav  # CLI
+./run.sh test -v                   # 테스트 (상세)
+./run.sh install all               # 의존성 설치
+./run.sh clean                     # 캐시 정리
+
+# 환경변수
+PVTTS_PORT=3000 ./run.sh web
+```
+
+### Windows
+
+```batch
+REM 대화형 메뉴 (권장)
+run.bat
+
+REM 직접 실행
+run.bat web
+run.bat gui
+run.bat cli basic info audio.wav
+run.bat test -v
+run.bat install all
+run.bat clean
+
+REM 환경변수
+set PVTTS_PORT=3000
+run.bat web
+```
+
+### Python (크로스플랫폼)
+
+```bash
+python run.py web --port 3000
+python run.py gui
+python run.py cli basic info audio.wav
+python run.py test
+python run.py install --extras all
+```
+
+### 환경변수
+
+| 변수 | 설명 | 기본값 |
+|------|------|--------|
+| `PVTTS_HOST` | 웹 서버 호스트 | 0.0.0.0 |
+| `PVTTS_PORT` | 웹 서버 포트 | 8000 |
+| `PVTTS_DEBUG` | 디버그 모드 (1로 활성화) | 0 |
 
 ## GPU 지원 (선택사항)
 

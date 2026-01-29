@@ -32,6 +32,72 @@ source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements-dev.txt
 ```
 
+## 실행 스크립트 사용법
+
+프로젝트는 향상된 크로스플랫폼 실행 스크립트를 제공합니다.
+
+### 대화형 메뉴
+
+인자 없이 스크립트를 실행하면 대화형 메뉴가 표시됩니다:
+
+```bash
+# Linux/macOS
+./run.sh
+
+# Windows
+run.bat
+```
+
+메뉴에서 번호를 선택하여 다음 기능을 사용할 수 있습니다:
+1. 웹 서버 실행
+2. GUI 실행
+3. CLI 도구 (서브메뉴)
+4. 테스트 실행 (옵션 선택)
+5. 의존성 설치 (패키지 선택)
+6. 캐시 정리
+7. 도움말
+
+### 명령어 직접 실행
+
+```bash
+# 웹 서버
+./run.sh web                    # 기본 포트 (8000)
+./run.sh web --port 3000        # 커스텀 포트
+
+# GUI
+./run.sh gui
+
+# CLI
+./run.sh cli basic info audio.wav
+./run.sh cli similarity find --target t.wav --source s.wav
+
+# 테스트
+./run.sh test                   # 기본 테스트
+./run.sh test -v                # 상세 출력
+./run.sh test -c                # 커버리지 포함
+
+# 의존성 설치
+./run.sh install basic          # 기본 패키지
+./run.sh install ai             # AI 패키지
+./run.sh install gui            # GUI 패키지
+./run.sh install all            # 전체 패키지
+
+# 정리
+./run.sh clean                  # 캐시 및 빌드 파일 삭제
+```
+
+### 환경변수
+
+| 변수 | 설명 | 기본값 |
+|------|------|--------|
+| `PVTTS_HOST` | 웹 서버 호스트 | 0.0.0.0 |
+| `PVTTS_PORT` | 웹 서버 포트 | 8000 |
+| `PVTTS_DEBUG` | 디버그 모드 | 0 |
+
+```bash
+PVTTS_PORT=3000 PVTTS_DEBUG=1 ./run.sh web
+```
+
 ## 개발 워크플로
 
 ### 1. 페이즈 선택
