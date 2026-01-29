@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Optional
 
 from PyQt6.QtWidgets import QApplication
+from PyQt6.QtGui import QFontDatabase, QFont
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +19,9 @@ class ThemeManager:
 
     # 사용 가능한 테마 목록
     AVAILABLE_THEMES = ["win98", "default"]
+
+    # 커스텀 폰트 이름
+    NEO_FONT_FAMILY: Optional[str] = None
 
     def __init__(self, app: QApplication):
         """
@@ -29,8 +33,30 @@ class ThemeManager:
         self.app = app
         self.current_theme: Optional[str] = None
         self._themes_dir = Path(__file__).parent
+        self._project_root = self._themes_dir.parent.parent
+
+        # 커스텀 폰트 로드
+        self._load_custom_fonts()
 
         logger.debug("ThemeManager 초기화")
+
+    def _load_custom_fonts(self):
+        """커스텀 폰트 로드 (NeoDunggeunmoPro)"""
+        font_path = self._project_root / "NeoDunggeunmoPro-Regular.ttf"
+
+        if font_path.exists():
+            font_id = QFontDatabase.addApplicationFont(str(font_path))
+            if font_id != -1:
+                font_families = QFontDatabase.applicationFontFamilies(font_id)
+                if font_families:
+                    ThemeManager.NEO_FONT_FAMILY = font_families[0]
+                    logger.info(f"커스텀 폰트 로드 성공: {ThemeManager.NEO_FONT_FAMILY}")
+                else:
+                    logger.warning("폰트 패밀리를 찾을 수 없음")
+            else:
+                logger.warning(f"폰트 로드 실패: {font_path}")
+        else:
+            logger.warning(f"폰트 파일을 찾을 수 없음: {font_path}")
 
     def apply_theme(self, theme_name: str) -> bool:
         """
@@ -68,6 +94,13 @@ class ThemeManager:
         try:
             with open(qss_path, "r", encoding="utf-8") as f:
                 stylesheet = f.read()
+
+            # 커스텀 폰트가 로드되었으면 폰트 이름 치환
+            if ThemeManager.NEO_FONT_FAMILY:
+                stylesheet = stylesheet.replace(
+                    '"NeoDunggeunmo Pro"',
+                    f'"{ThemeManager.NEO_FONT_FAMILY}"'
+                )
 
             self.app.setStyleSheet(stylesheet)
             self.current_theme = "win98"
