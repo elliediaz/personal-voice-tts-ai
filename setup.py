@@ -8,7 +8,7 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
 
 setup(
     name="personal-voice-tts-ai",
-    version="0.1.0",
+    version="0.9.0",
     author="Kim Kyung Min",
     author_email="oswardfish@outlook.kr",
     description="음성 콜라주 및 합성 기반의 고급 TTS 시스템",
