@@ -585,10 +585,24 @@ interactive_menu() {
 # ============================================================================
 main() {
     show_banner
-    check_python
-    activate_venv
 
     COMMAND=${1:-menu}
+
+    # Python 불필요한 명령어 먼저 처리
+    case $COMMAND in
+        help|--help|-h)
+            show_help
+            exit 0
+            ;;
+        clean)
+            clean_project
+            exit 0
+            ;;
+    esac
+
+    # Python 필요한 명령어
+    check_python
+    activate_venv
 
     case $COMMAND in
         web)
@@ -606,14 +620,8 @@ main() {
         install)
             install_deps "$@"
             ;;
-        clean)
-            clean_project
-            ;;
         menu)
             interactive_menu
-            ;;
-        help|--help|-h)
-            show_help
             ;;
         *)
             msg_error "알 수 없는 명령어: $COMMAND"
