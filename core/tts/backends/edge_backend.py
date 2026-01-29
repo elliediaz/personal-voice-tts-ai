@@ -25,14 +25,22 @@ class EdgeTTSBackend(BaseTTSEngine):
         self,
         language: str = "ko-KR",
         voice: Optional[str] = None,
+        speech_rate: float = 1.0,
+        pitch: float = 1.0,
+        volume: float = 1.0,
         **kwargs,
     ):
         """
         Args:
             language: 언어 코드
             voice: 음성 이름 (예: ko-KR-SunHiNeural)
+            speech_rate: 말하기 속도 (0.5~2.0, 기본 1.0)
+            pitch: 음높이 (0.5~2.0, 기본 1.0)
+            volume: 볼륨 (0.0~1.0, 기본 1.0)
         """
-        super().__init__(language=language, voice=voice, **kwargs)
+        super().__init__(language=language, voice=voice, volume=volume, **kwargs)
+        self.speech_rate = speech_rate
+        self.pitch = pitch
 
         # edge-tts 지연 로드
         try:
@@ -99,7 +107,22 @@ class EdgeTTSBackend(BaseTTSEngine):
 
     async def _async_synthesize(self, text: str, output_path: Path):
         """비동기 TTS 합성"""
-        communicate = self.edge_tts.Communicate(text, self.voice)
+        # 속도 및 피치를 SSML 형식 문자열로 변환
+        # rate: +50%, -25% 형식 (100% = 1.0x)
+        rate_percent = int((self.speech_rate - 1.0) * 100)
+        rate_str = f"+{rate_percent}%" if rate_percent >= 0 else f"{rate_percent}%"
+
+        # pitch: +50Hz, -25Hz 형식 (1.0x = 0Hz 기준으로 50Hz 스케일)
+        pitch_hz = int((self.pitch - 1.0) * 50)
+        pitch_str = f"+{pitch_hz}Hz" if pitch_hz >= 0 else f"{pitch_hz}Hz"
+
+        # 볼륨: +0% ~ -100% 형식
+        volume_percent = int((self.volume - 1.0) * 100)
+        volume_str = f"+{volume_percent}%" if volume_percent >= 0 else f"{volume_percent}%"
+
+        communicate = self.edge_tts.Communicate(
+            text, self.voice, rate=rate_str, pitch=pitch_str, volume=volume_str
+        )
         await communicate.save(str(output_path))
 
     def get_available_voices(self) -> list:
@@ -115,4 +138,4 @@ class EdgeTTSBackend(BaseTTSEngine):
         return voices
 
     def __repr__(self) -> str:
-        return f"EdgeTTSBackend(language={self.language}, voice={self.voice})"
+        return f"EdgeTTSBackend(language={self.language}, voice={self.voice}, rate={self.speech_rate}, pitch={self.pitch})"
