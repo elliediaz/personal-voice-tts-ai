@@ -187,3 +187,25 @@ class AudioPlayerWidget(QWidget):
     def get_duration(self) -> int:
         """재생 길이 (밀리초)"""
         return self.player.duration()
+
+    def play(self):
+        """
+        외부에서 재생을 시작합니다.
+
+        오디오가 로드된 상태에서만 동작합니다.
+        """
+        if self.audio_path:
+            self.player.play()
+            self.play_button.setText("일시정지")
+            logger.debug("외부에서 재생 시작")
+
+    def load_and_play(self, audio_path: Path):
+        """
+        오디오 파일을 로드하고 즉시 재생합니다.
+
+        Args:
+            audio_path: 오디오 파일 경로
+        """
+        self.load_audio(audio_path)
+        # 미디어 로드 완료 후 재생하기 위해 약간의 지연
+        QTimer.singleShot(100, self.play)

@@ -22,10 +22,12 @@ from PyQt6.QtWidgets import (
     QProgressBar,
     QMessageBox,
     QListWidget,
+    QCheckBox,
 )
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
 
 from gui.widgets.player import AudioPlayerWidget
+from utils.temp_manager import TempFileManager
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +36,7 @@ class TTSWorker(QThread):
     """TTS 작업 워커 스레드"""
 
     progress = pyqtSignal(int)
-    finished = pyqtSignal(dict)
+    finished = pyqtSignal(dict, bool)  # metadata, auto_play
     error = pyqtSignal(str)
 
     def __init__(
@@ -44,6 +46,7 @@ class TTSWorker(QThread):
         output_file: Path,
         backend: str,
         collage: bool = False,
+        auto_play: bool = False,
     ):
         super().__init__()
         self.text = text
@@ -51,6 +54,7 @@ class TTSWorker(QThread):
         self.output_file = output_file
         self.backend = backend
         self.collage = collage
+        self.auto_play = auto_play
 
     def run(self):
         """워커 실행"""
@@ -78,7 +82,7 @@ class TTSWorker(QThread):
                 )
 
                 self.progress.emit(100)
-                self.finished.emit(metadata)
+                self.finished.emit(metadata, self.auto_play)
 
             else:
                 # 일반 TTS
@@ -97,7 +101,7 @@ class TTSWorker(QThread):
                 )
 
                 self.progress.emit(100)
-                self.finished.emit({"output_path": str(self.output_file)})
+                self.finished.emit({"output_path": str(self.output_file)}, self.auto_play)
 
         except Exception as e:
             logger.error(f"TTS 오류: {str(e)}", exc_info=True)
@@ -174,6 +178,21 @@ class TTSPanel(QWidget):
         output_layout.addWidget(output_btn)
         settings_layout.addLayout(output_layout)
 
+        # 옵션 체크박스
+        options_layout = QHBoxLayout()
+        self.use_temp_file_checkbox = QCheckBox("임시 파일 사용")
+        self.use_temp_file_checkbox.setChecked(True)
+        self.use_temp_file_checkbox.setToolTip("체크 시 출력 파일 지정 없이 임시 파일에 저장")
+        options_layout.addWidget(self.use_temp_file_checkbox)
+
+        self.auto_play_checkbox = QCheckBox("생성 후 자동 재생")
+        self.auto_play_checkbox.setChecked(True)
+        self.auto_play_checkbox.setToolTip("체크 시 음성 생성 완료 후 자동으로 재생")
+        options_layout.addWidget(self.auto_play_checkbox)
+
+        options_layout.addStretch()
+        settings_layout.addLayout(options_layout)
+
         layout.addWidget(settings_group)
 
         # 오디오 플레이어
@@ -191,6 +210,31 @@ class TTSPanel(QWidget):
         # 버튼
         button_layout = QHBoxLayout()
         button_layout.addStretch()
+
+        # 바로 듣기 버튼 (강조)
+        self.quick_speak_btn = QPushButton("▶ 바로 듣기")
+        self.quick_speak_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #4CAF50;
+                color: white;
+                font-weight: bold;
+                padding: 8px 16px;
+                border: none;
+                border-radius: 4px;
+            }
+            QPushButton:hover {
+                background-color: #45a049;
+            }
+            QPushButton:pressed {
+                background-color: #3d8b40;
+            }
+            QPushButton:disabled {
+                background-color: #cccccc;
+            }
+        """)
+        self.quick_speak_btn.setToolTip("텍스트를 즉시 음성으로 변환하고 재생합니다")
+        self.quick_speak_btn.clicked.connect(self._on_quick_speak)
+        button_layout.addWidget(self.quick_speak_btn)
 
         self.speak_btn = QPushButton("음성 생성")
         self.speak_btn.clicked.connect(lambda: self._on_generate_tts(collage=False))
@@ -240,29 +284,43 @@ class TTSPanel(QWidget):
             self.output_edit.setText(str(self.output_file))
             logger.info(f"출력 파일 선택: {self.output_file}")
 
-    def _on_generate_tts(self, collage: bool = False):
-        """TTS 생성"""
-        # 검증
+    def _get_output_path(self) -> Optional[Path]:
+        """
+        출력 파일 경로를 반환합니다.
+
+        임시 파일 사용이 체크되어 있으면 임시 파일 경로를 생성하고,
+        그렇지 않으면 사용자가 지정한 출력 파일 경로를 반환합니다.
+
+        Returns:
+            Path: 출력 파일 경로, 유효하지 않으면 None
+        """
+        if self.use_temp_file_checkbox.isChecked():
+            return TempFileManager.create_temp_file(suffix=".wav")
+        else:
+            if not self.output_file:
+                QMessageBox.warning(self, "경고", "출력 파일을 선택하거나 '임시 파일 사용'을 체크하세요.")
+                return None
+            return self.output_file
+
+    def _on_quick_speak(self):
+        """바로 듣기: 임시 파일로 생성 후 자동 재생"""
+        # 텍스트 검증
         text = self.text_edit.toPlainText().strip()
         if not text:
             QMessageBox.warning(self, "경고", "텍스트를 입력하세요.")
             return
 
-        if not self.output_file:
-            QMessageBox.warning(self, "경고", "출력 파일을 선택하세요.")
-            return
+        # 임시 파일 경로 생성
+        output_path = TempFileManager.create_temp_file(suffix=".wav")
 
-        if collage and not self.source_files:
-            QMessageBox.warning(self, "경고", "콜라주를 위해 소스 파일을 추가하세요.")
-            return
-
-        # 워커 스레드 생성
+        # 워커 스레드 생성 (auto_play=True)
         self.worker = TTSWorker(
             text=text,
-            source_files=self.source_files,
-            output_file=self.output_file,
+            source_files=[],
+            output_file=output_path,
             backend=self.backend_combo.currentText(),
-            collage=collage,
+            collage=False,
+            auto_play=True,
         )
 
         self.worker.progress.connect(self._on_progress)
@@ -270,6 +328,7 @@ class TTSPanel(QWidget):
         self.worker.error.connect(self._on_tts_error)
 
         # UI 업데이트
+        self.quick_speak_btn.setEnabled(False)
         self.speak_btn.setEnabled(False)
         self.collage_btn.setEnabled(False)
         self.progress_bar.setVisible(True)
@@ -278,27 +337,83 @@ class TTSPanel(QWidget):
         # 워커 시작
         self.worker.start()
 
-        logger.info(f"TTS 생성 시작 (collage={collage})")
+        logger.info("바로 듣기 시작")
+
+    def _on_generate_tts(self, collage: bool = False):
+        """TTS 생성"""
+        # 검증
+        text = self.text_edit.toPlainText().strip()
+        if not text:
+            QMessageBox.warning(self, "경고", "텍스트를 입력하세요.")
+            return
+
+        # 출력 경로 결정
+        output_path = self._get_output_path()
+        if not output_path:
+            return
+
+        if collage and not self.source_files:
+            QMessageBox.warning(self, "경고", "콜라주를 위해 소스 파일을 추가하세요.")
+            return
+
+        # auto_play 옵션 확인
+        auto_play = self.auto_play_checkbox.isChecked()
+
+        # 워커 스레드 생성
+        self.worker = TTSWorker(
+            text=text,
+            source_files=self.source_files,
+            output_file=output_path,
+            backend=self.backend_combo.currentText(),
+            collage=collage,
+            auto_play=auto_play,
+        )
+
+        self.worker.progress.connect(self._on_progress)
+        self.worker.finished.connect(self._on_tts_finished)
+        self.worker.error.connect(self._on_tts_error)
+
+        # UI 업데이트
+        self.quick_speak_btn.setEnabled(False)
+        self.speak_btn.setEnabled(False)
+        self.collage_btn.setEnabled(False)
+        self.progress_bar.setVisible(True)
+        self.progress_bar.setValue(0)
+
+        # 워커 시작
+        self.worker.start()
+
+        logger.info(f"TTS 생성 시작 (collage={collage}, auto_play={auto_play})")
 
     def _on_progress(self, value):
         """진행률 업데이트"""
         self.progress_bar.setValue(value)
 
-    def _on_tts_finished(self, metadata):
+    def _on_tts_finished(self, metadata: dict, auto_play: bool):
         """TTS 생성 완료"""
+        self.quick_speak_btn.setEnabled(True)
         self.speak_btn.setEnabled(True)
         self.collage_btn.setEnabled(True)
         self.progress_bar.setVisible(False)
 
-        QMessageBox.information(self, "완료", f"음성 생성이 완료되었습니다.\n\n출력: {self.output_file}")
+        # 출력 경로 가져오기
+        output_path = Path(metadata.get("output_path", ""))
 
-        # 결과 플레이어 로드
-        self.player_widget.load_audio(self.output_file)
+        # 임시 파일이 아닌 경우에만 완료 메시지 표시
+        if not self.use_temp_file_checkbox.isChecked() or not auto_play:
+            QMessageBox.information(self, "완료", f"음성 생성이 완료되었습니다.\n\n출력: {output_path}")
 
-        logger.info("TTS 생성 완료")
+        # 결과 플레이어 로드 (및 자동 재생)
+        if auto_play:
+            self.player_widget.load_and_play(output_path)
+        else:
+            self.player_widget.load_audio(output_path)
+
+        logger.info(f"TTS 생성 완료 (auto_play={auto_play})")
 
     def _on_tts_error(self, error_msg):
         """TTS 생성 오류"""
+        self.quick_speak_btn.setEnabled(True)
         self.speak_btn.setEnabled(True)
         self.collage_btn.setEnabled(True)
         self.progress_bar.setVisible(False)
