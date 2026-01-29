@@ -31,6 +31,7 @@ from gui.panels.tts_panel import TTSPanel
 from gui.panels.batch_panel import BatchPanel
 from gui.dialogs.settings import SettingsDialog
 from gui.dialogs.help import HelpDialog
+from gui.themes import ThemeManager
 from config import get_config
 
 logger = logging.getLogger(__name__)
@@ -52,6 +53,19 @@ class MainWindow(QMainWindow):
         self._restore_settings()
 
         logger.info("메인 윈도우 초기화 완료")
+
+    def apply_theme(self, theme_name: str = "win98"):
+        """
+        테마 적용
+
+        Args:
+            theme_name: 테마 이름 (기본값: "win98")
+        """
+        app = QApplication.instance()
+        if app:
+            self.theme_manager = ThemeManager(app)
+            self.theme_manager.apply_theme(theme_name)
+            logger.info(f"테마 적용: {theme_name}")
 
     def _init_ui(self):
         """UI 초기화"""
@@ -262,6 +276,7 @@ def main():
 
     # 메인 윈도우 생성 및 표시
     window = MainWindow()
+    window.apply_theme("win98")
     window.show()
 
     # 이벤트 루프 실행
