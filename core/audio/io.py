@@ -11,13 +11,24 @@ from typing import Optional, Tuple, Union
 import librosa
 import numpy as np
 import soundfile as sf
-from pydub import AudioSegment
+
+# pydub는 선택적 의존성 (MP3/M4A/AAC 저장 시에만 필요)
+try:
+    from pydub import AudioSegment
+    PYDUB_AVAILABLE = True
+except ImportError:
+    PYDUB_AVAILABLE = False
+    AudioSegment = None
 
 from config import get_config
 from utils.logging import get_logger
 from utils.validators import validate_audio_file, validate_output_path, validate_sample_rate, validate_channels
 
 logger = get_logger(__name__)
+
+# pydub 미설치 시 경고 로깅
+if not PYDUB_AVAILABLE:
+    logger.warning("pydub 미설치: MP3/M4A/AAC 저장 기능이 제한됩니다 (WAV로 대체됨)")
 
 
 class AudioFile:
@@ -180,6 +191,14 @@ class AudioFile:
                 sf.write(str(output_path), self.data, self.sample_rate, **kwargs)
             elif format in ['mp3', 'm4a', 'aac']:
                 # pydub를 사용하여 손실 압축 포맷 저장
+                if not PYDUB_AVAILABLE:
+                    # pydub 미설치 시 WAV로 대체 저장
+                    wav_path = output_path.with_suffix('.wav')
+                    sf.write(str(wav_path), self.data, self.sample_rate)
+                    logger.warning(
+                        f"pydub 미설치로 {format.upper()} 대신 WAV로 저장됨: {wav_path}"
+                    )
+                    return wav_path
                 # numpy 배열을 pydub AudioSegment로 변환
                 audio_segment = self._to_audio_segment()
                 audio_segment.export(
