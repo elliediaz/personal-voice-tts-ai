@@ -172,7 +172,21 @@ python -m uvicorn web.app:app --host 0.0.0.0 --port 8000 --reload
 
 ## 실행 스크립트 사용법
 
-프로젝트는 크로스플랫폼 실행 스크립트를 제공합니다. 모든 스크립트는 대화형 메뉴, 색상 출력, 자동 가상환경 감지를 지원합니다.
+프로젝트는 크로스플랫폼 실행 스크립트를 제공합니다. 모든 스크립트는 대화형 메뉴, 색상 출력, 자동 가상환경 설정을 지원합니다.
+
+### 자동 환경 설정
+
+첫 실행 시 자동으로 가상환경을 생성하고 필수 의존성을 설치합니다.
+
+```bash
+# 첫 실행 시 자동 환경 설정
+./run.sh              # Linux/macOS
+run.bat               # Windows
+
+# 수동 환경 설정 (옵션 선택)
+./run.sh setup        # 기본/GUI/TTS/전체/개발 환경 선택
+run.bat setup
+```
 
 ### 대화형 메뉴 모드
 
@@ -193,6 +207,9 @@ run.bat               # Windows
 ./run.sh test -v                   # 상세 테스트 실행
 ./run.sh test -c                   # 커버리지 테스트 실행
 ./run.sh install all               # 모든 의존성 설치
+./run.sh setup                     # 환경 설정 메뉴
+./run.sh status                    # 환경 상태 확인
+./run.sh reset                     # 환경 초기화
 ./run.sh clean                     # 캐시 및 빌드 파일 정리
 
 # Windows
@@ -202,6 +219,9 @@ run.bat gui
 run.bat cli basic info audio.wav
 run.bat test -v
 run.bat install all
+run.bat setup
+run.bat status
+run.bat reset
 run.bat clean
 
 # Python (모든 플랫폼)
@@ -217,9 +237,11 @@ python run.py install --extras all
 # Linux/macOS
 PVTTS_PORT=3000 ./run.sh web       # 환경변수로 포트 설정
 PVTTS_DEBUG=1 ./run.sh web         # 디버그 모드 활성화
+PVTTS_AUTO_SETUP=0 ./run.sh web    # 자동 설정 비활성화
 
 # Windows
 set PVTTS_PORT=3000
+set PVTTS_AUTO_SETUP=0
 run.bat web
 ```
 
@@ -228,6 +250,8 @@ run.bat web
 | `PVTTS_HOST` | 웹 서버 호스트 | 0.0.0.0 |
 | `PVTTS_PORT` | 웹 서버 포트 | 8000 |
 | `PVTTS_DEBUG` | 디버그 모드 (1로 활성화) | 0 |
+| `PVTTS_VENV_NAME` | 가상환경 디렉토리 이름 | venv |
+| `PVTTS_AUTO_SETUP` | 자동 환경 설정 (0으로 비활성화) | 1 |
 
 ## 프로젝트 구조
 
@@ -368,7 +392,25 @@ stages:
 
 ## 변경 이력
 
-### v0.9.0 (현재 버전)
+### v1.0.0 (현재 버전)
+- 실행 스크립트 자동 환경 설정 기능
+  - 첫 실행 시 가상환경 자동 생성 및 의존성 설치
+  - setup 명령어 (기본/GUI/TTS/전체/개발 환경 선택)
+  - status 명령어 (환경 상태 및 의존성 설치 현황)
+  - reset 명령어 (가상환경 초기화)
+  - 환경변수 추가 (PVTTS_VENV_NAME, PVTTS_AUTO_SETUP)
+  - 의존성 누락 시 대화형 설치 안내
+- TTS 음성 파라미터 고도화
+  - 속도/피치/볼륨 슬라이더 UI
+  - 음성 프리셋 시스템 (기본, 천천히 또렷하게, 빠르고 경쾌하게 등)
+  - 미리 듣기, 다시 듣기 버튼
+  - 백엔드별 파라미터 지원 (gTTS, pyttsx3, Edge-TTS)
+- Windows 2000 스타일 GUI 테마 개선
+  - NeoDunggeunmoPro 폰트 적용
+  - 그라디언트 버튼 및 슬라이더
+  - 개선된 탭, 프로그레스바, 그룹박스 스타일
+
+### v0.9.0
 - 향상된 실행 스크립트
   - 대화형 메뉴 시스템 (번호 선택 방식)
   - ASCII 아트 배너 및 색상 출력
