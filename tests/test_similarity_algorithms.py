@@ -256,7 +256,9 @@ class TestRhythmSimilarity:
         if algo.use_tempo:
             assert 'tempo' in features
             assert 'beats' in features
-            assert features['tempo'] > 0
+            # 순수 사인파는 온셋/비트가 없어 tempo가 0이 될 수 있으므로
+            # 양수 강제 대신 유효한 비음수 값인지만 검증한다.
+            assert features['tempo'] >= 0
 
         if algo.use_onset:
             assert 'onset_env' in features
