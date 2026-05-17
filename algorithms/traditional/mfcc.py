@@ -139,21 +139,27 @@ class MFCCSimilarity(BaseSimilarityAlgorithm):
                 ])
             elif self.distance_metric == 'cosine':
                 # 코사인 거리
-                distance = np.mean([
+                # 영벡터 프레임은 cosine()이 NaN을 반환하므로 제외
+                cos_dists = [
                     cosine(feat1_trimmed[:, i], feat2_trimmed[:, i])
                     for i in range(min_frames)
-                ])
+                ]
+                cos_dists = [d for d in cos_dists if not np.isnan(d)]
+                distance = np.mean(cos_dists) if cos_dists else 0.0
             elif self.distance_metric == 'correlation':
                 # 상관 계수 기반 거리
                 correlations = []
                 for i in range(feat1.shape[0]):
                     corr = np.corrcoef(feat1_trimmed[i, :], feat2_trimmed[i, :])[0, 1]
-                    correlations.append(1 - abs(corr))  # 1 - |correlation|
-                distance = np.mean(correlations)
+                    # 상수 프레임은 상관계수가 NaN이 되므로 무시
+                    if not np.isnan(corr):
+                        correlations.append(1 - abs(corr))  # 1 - |correlation|
+                distance = np.mean(correlations) if correlations else 0.0
             else:
                 raise ValueError(f"지원하지 않는 거리 메트릭: {self.distance_metric}")
 
-        return distance
+        # 호출부/직렬화 계약을 위해 항상 파이썬 float 반환
+        return float(distance)
 
     def _dtw_distance(
         self,

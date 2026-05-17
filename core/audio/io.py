@@ -188,6 +188,15 @@ class AudioFile:
         try:
             if format in ['wav', 'flac', 'ogg']:
                 # soundfile을 사용하여 무손실 포맷 저장
+                # 부동소수점 데이터는 기본 16비트 PCM으로 양자화되어
+                # 합성 결과의 정밀도가 손실되므로, 호출자가 subtype을
+                # 지정하지 않은 경우 부동소수점 데이터에 대해 FLOAT 서브타입을 사용
+                if (
+                    "subtype" not in kwargs
+                    and format == "wav"
+                    and np.issubdtype(self.data.dtype, np.floating)
+                ):
+                    kwargs["subtype"] = "FLOAT"
                 sf.write(str(output_path), self.data, self.sample_rate, **kwargs)
             elif format in ['mp3', 'm4a', 'aac']:
                 # pydub를 사용하여 손실 압축 포맷 저장

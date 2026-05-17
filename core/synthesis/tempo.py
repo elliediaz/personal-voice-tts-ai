@@ -128,7 +128,8 @@ class TempoAdjuster:
         onset_env = librosa.onset.onset_strength(y=audio, sr=sample_rate)
 
         # Tempogram 기반 템포 추정
-        tempo = librosa.feature.rhythm.tempo(onset_envelope=onset_env, sr=sample_rate)[0]
+        # librosa 0.10+ 에서 rhythm.tempo 가 librosa.feature.tempo 로 이동됨
+        tempo = librosa.feature.tempo(onset_envelope=onset_env, sr=sample_rate)[0]
 
         logger.debug(f"템포 추정: {tempo:.1f} BPM")
 

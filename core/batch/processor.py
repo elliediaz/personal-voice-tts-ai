@@ -107,7 +107,11 @@ class BatchProcessor:
             futures = {}
             completed_jobs = set()
 
-            while self.job_queue.has_pending():
+            # 대기 중인 작업이 남아 있거나, 제출되어 아직 처리되지 않은
+            # future가 있는 동안 계속 진행한다. has_pending() 만으로
+            # 종료하면 제출 직후 status가 "running"으로 바뀌어 완료된
+            # future가 집계되기 전에 루프가 빠져나가는 버그가 발생한다.
+            while self.job_queue.has_pending() or futures:
                 # 실행 가능한 작업 찾기 (의존성이 모두 완료된 작업)
                 ready_jobs = self._get_ready_jobs(completed_jobs)
 
