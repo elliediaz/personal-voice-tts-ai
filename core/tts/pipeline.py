@@ -9,12 +9,10 @@ from pathlib import Path
 from typing import Optional, List
 import tempfile
 
-import numpy as np
 
 from core.tts.base import BaseTTSEngine
 from core.tts.preprocessing import TextPreprocessor
 from core.synthesis.engine import CollageEngine
-from core.audio.io import AudioFile
 from algorithms.base import BaseSimilarityAlgorithm
 
 logger = logging.getLogger(__name__)

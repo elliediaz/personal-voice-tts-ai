@@ -4,7 +4,6 @@ Tests for Audio I/O Module
 
 import pytest
 import numpy as np
-from pathlib import Path
 
 from core.audio.io import AudioFile
 

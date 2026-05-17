@@ -2,7 +2,6 @@
 Tests for Similarity Algorithms
 """
 
-import pytest
 import numpy as np
 
 from algorithms.traditional.mfcc import MFCCSimilarity

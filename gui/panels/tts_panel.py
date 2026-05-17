@@ -7,7 +7,7 @@ TTS 패널
 import logging
 import random
 from pathlib import Path
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict
 
 from PyQt6.QtWidgets import (
     QWidget,
@@ -25,7 +25,6 @@ from PyQt6.QtWidgets import (
     QListWidget,
     QCheckBox,
     QSlider,
-    QFrame,
 )
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
 

@@ -6,7 +6,7 @@ Batch TTS Processing
 
 import logging
 from pathlib import Path
-from typing import List, Optional
+from typing import List
 import time
 
 from core.tts.pipeline import TTSPipeline

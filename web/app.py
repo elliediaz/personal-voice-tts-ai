@@ -4,22 +4,21 @@ Web Application
 FastAPI 기반 웹 애플리케이션 메인 모듈
 """
 
-import os
 import uuid
 import tempfile
 import logging
 from pathlib import Path
-from typing import Optional, List
 
-from fastapi import FastAPI, File, UploadFile, Form, HTTPException, BackgroundTasks
+from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 import aiofiles
 
 from config import get_config
+from core import __version__ as APP_VERSION
 from core.audio.io import AudioFile
 from core.audio.analysis import AudioAnalyzer
 from core.tts.preprocessing import TextPreprocessor
@@ -32,7 +31,7 @@ logger = logging.getLogger(__name__)
 app = FastAPI(
     title="Personal Voice TTS AI",
     description="음성 콜라주 및 합성 기반 TTS 시스템 API",
-    version="0.1.0",
+    version=APP_VERSION,
 )
 
 # CORS 설정
@@ -80,7 +79,7 @@ async def health_check():
     """서비스 상태 확인"""
     return {
         "status": "healthy",
-        "version": "0.1.0",
+        "version": APP_VERSION,
         "service": "Personal Voice TTS AI"
     }
 
@@ -90,7 +89,7 @@ async def service_info():
     """서비스 정보 조회"""
     return {
         "name": "Personal Voice TTS AI",
-        "version": "0.1.0",
+        "version": APP_VERSION,
         "description": "음성 콜라주 및 합성 기반 TTS 시스템",
         "features": [
             "오디오 분석",

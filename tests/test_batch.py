@@ -4,7 +4,6 @@ Tests for Batch Processing Modules
 
 import pytest
 import time
-from pathlib import Path
 
 from core.batch.processor import BatchProcessor
 from core.batch.queue import JobQueue, Job

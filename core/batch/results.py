@@ -5,7 +5,7 @@ Result Aggregator
 """
 
 import logging
-from typing import Dict, List, Any
+from typing import Dict, Any
 from pathlib import Path
 import json
 import csv

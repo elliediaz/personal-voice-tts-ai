@@ -5,13 +5,11 @@ Batch Processing CLI
 """
 
 import sys
-import json
 from pathlib import Path
 
 import click
 
 from core.batch.processor import BatchProcessor
-from core.batch.pipeline import Pipeline
 from config import get_config
 from utils.logging import setup_logger
 
@@ -145,7 +143,7 @@ def run(ctx, workflow, input_file, source_paths, output_dir, max_workers, use_pr
         summary = processor.process_all()
 
         # 결과 출력
-        click.echo(f"\n\n배치 처리 완료!")
+        click.echo("\n\n배치 처리 완료!")
         click.echo(f"전체: {summary['total_count']}")
         click.echo(f"성공: {summary['success_count']}")
         click.echo(f"실패: {summary['error_count']}")
@@ -171,8 +169,6 @@ def list_workflows(ctx, workflow):
     """
     사용 가능한 워크플로 목록을 표시합니다.
     """
-    logger = ctx.obj['logger']
-
     workflows_dir = Path("config/workflows")
 
     if not workflows_dir.exists():
@@ -216,9 +212,7 @@ def benchmark(ctx, job_count, max_workers, use_processes):
     import time
     import random
 
-    logger = ctx.obj['logger']
-
-    click.echo(f"\n배치 프로세서 벤치마크")
+    click.echo("\n배치 프로세서 벤치마크")
     click.echo(f"작업 수: {job_count}")
     click.echo(f"워커 수: {max_workers}")
     click.echo(f"실행 방식: {'프로세스' if use_processes else '스레드'}\n")
@@ -250,7 +244,7 @@ def benchmark(ctx, job_count, max_workers, use_processes):
     summary = processor.process_all()
 
     # 결과
-    click.echo(f"\n\n벤치마크 결과:")
+    click.echo("\n\n벤치마크 결과:")
     click.echo(f"전체 작업: {summary['total_count']}")
     click.echo(f"성공: {summary['success_count']}")
     click.echo(f"실패: {summary['error_count']}")

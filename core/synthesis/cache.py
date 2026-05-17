@@ -5,7 +5,7 @@ Segment Cache
 """
 
 import logging
-from typing import Optional, Tuple, Any
+from typing import Optional, Tuple
 from collections import OrderedDict
 import hashlib
 

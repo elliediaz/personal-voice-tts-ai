@@ -11,7 +11,6 @@ from PyQt6.QtWidgets import (
     QTextBrowser,
     QDialogButtonBox,
 )
-from PyQt6.QtCore import Qt
 
 logger = logging.getLogger(__name__)
 

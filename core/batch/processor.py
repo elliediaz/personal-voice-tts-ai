@@ -6,9 +6,8 @@ Batch Processor
 
 import logging
 import time
-from pathlib import Path
 from typing import List, Dict, Any, Optional, Callable
-from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 import multiprocessing as mp
 
 from core.batch.queue import JobQueue, Job

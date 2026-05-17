@@ -5,7 +5,6 @@ Progress Tracker
 """
 
 import logging
-import time
 from typing import Optional
 from datetime import datetime, timedelta
 

@@ -22,7 +22,7 @@ from PyQt6.QtWidgets import (
     QMessageBox,
     QListWidget,
 )
-from PyQt6.QtCore import Qt, QThread, pyqtSignal
+from PyQt6.QtCore import QThread, pyqtSignal
 
 from gui.widgets.player import AudioPlayerWidget
 from gui.widgets.waveform import WaveformWidget

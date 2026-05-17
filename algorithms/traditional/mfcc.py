@@ -4,11 +4,10 @@ MFCC-based Similarity Algorithm
 MFCC (Mel-Frequency Cepstral Coefficients) 특징을 사용한 유사도 검출 알고리즘입니다.
 """
 
-from typing import List, Optional
+from typing import List
 import numpy as np
 import librosa
 from scipy.spatial.distance import euclidean, cosine
-from scipy.signal import correlate
 from tqdm import tqdm
 
 from algorithms.base import BaseSimilarityAlgorithm, SimilarityMatch

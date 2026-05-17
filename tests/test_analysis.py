@@ -2,10 +2,13 @@
 Tests for Audio Analysis Module
 """
 
-import pytest
+import matplotlib
 import numpy as np
 
-from core.audio.analysis import AudioAnalyzer
+matplotlib.use("Agg")  # 헤드리스 환경용 비대화형 백엔드
+import matplotlib.pyplot as plt  # noqa: E402
+
+from core.audio.analysis import AudioAnalyzer  # noqa: E402
 
 
 class TestAudioAnalyzer:
@@ -109,7 +112,3 @@ class TestAudioAnalyzer:
 
         assert fig is not None
         plt.close(fig)
-
-
-# matplotlib import for cleanup
-import matplotlib.pyplot as plt

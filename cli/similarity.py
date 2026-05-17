@@ -6,7 +6,6 @@ Similarity CLI Module
 
 import sys
 import json
-from pathlib import Path
 
 import click
 
@@ -66,7 +65,7 @@ def find(ctx, target_path, source_path, algorithm, top_k, output):
     logger = ctx.obj['logger']
 
     try:
-        logger.info(f"유사 세그먼트 검색 시작...")
+        logger.info("유사 세그먼트 검색 시작...")
         logger.info(f"타겟: {target_path}")
         logger.info(f"소스: {source_path}")
         logger.info(f"알고리즘: {algorithm}")
@@ -145,7 +144,7 @@ def ensemble(ctx, target_path, source_path, algorithms, top_k, output):
     logger = ctx.obj['logger']
 
     try:
-        logger.info(f"앙상블 검색 시작...")
+        logger.info("앙상블 검색 시작...")
         logger.info(f"알고리즘: {list(algorithms)}")
 
         # 오디오 로드

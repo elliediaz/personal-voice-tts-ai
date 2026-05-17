@@ -13,14 +13,11 @@ from PyQt6.QtWidgets import (
     QWidget,
     QGroupBox,
     QLabel,
-    QLineEdit,
     QSpinBox,
     QComboBox,
     QCheckBox,
-    QPushButton,
     QDialogButtonBox,
 )
-from PyQt6.QtCore import Qt
 
 logger = logging.getLogger(__name__)
 

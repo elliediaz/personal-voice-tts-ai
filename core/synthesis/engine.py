@@ -12,7 +12,7 @@ import time
 import numpy as np
 
 from core.audio.io import AudioFile
-from algorithms.base import SimilarityMatch, BaseSimilarityAlgorithm
+from algorithms.base import BaseSimilarityAlgorithm
 from core.synthesis.extractor import SegmentExtractor
 from core.synthesis.blending import AudioBlender
 from core.synthesis.pitch import PitchAdjuster

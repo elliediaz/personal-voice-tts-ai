@@ -6,7 +6,7 @@ Audio I/O Module
 
 import warnings
 from pathlib import Path
-from typing import Optional, Tuple, Union
+from typing import Optional, Union
 
 import librosa
 import numpy as np

@@ -16,7 +16,6 @@ from core.synthesis.metrics import QualityMetrics
 from algorithms.traditional.mfcc import MFCCSimilarity
 from algorithms.ai_based.embedding_matcher import EmbeddingSimilarity
 from algorithms.ai_based.hybrid import HybridSimilarity
-from core.similarity.manager import AlgorithmManager
 from config import get_config
 from utils.logging import setup_logger
 
@@ -119,7 +118,7 @@ def synthesize(ctx, target_path, source_paths, output, algorithm, top_k,
             progress_callback=progress_callback,
         )
 
-        click.echo(f"\n합성 완료!")
+        click.echo("\n합성 완료!")
         click.echo(f"출력 파일: {output}")
         click.echo(f"처리 시간: {synth_metadata['processing_time']:.2f}초")
         click.echo(f"최고 유사도: {synth_metadata['similarity']:.3f}")
@@ -182,19 +181,19 @@ def analyze(ctx, audio_path, reference, output):
         click.echo(f"Zero Crossing Rate: {results['zero_crossing_rate']:.4f}")
         click.echo(f"스펙트럼 중심: {results['spectral_centroid']:.1f} Hz")
 
-        click.echo(f"\n클리핑:")
+        click.echo("\n클리핑:")
         click.echo(f"  - 클리핑 샘플: {results['clipping']['clipped_samples']}")
         click.echo(f"  - 클리핑 비율: {results['clipping']['clipping_ratio']:.2%}")
         click.echo(f"  - 클리핑 감지: {'예' if results['clipping']['is_clipped'] else '아니오'}")
 
-        click.echo(f"\n무음:")
+        click.echo("\n무음:")
         click.echo(f"  - 무음 샘플: {results['silence']['silent_samples']}")
         click.echo(f"  - 무음 비율: {results['silence']['silence_ratio']:.2%}")
         click.echo(f"  - 무음 구간 수: {results['silence']['num_silent_intervals']}")
 
         # 참조 오디오와 비교
         if reference:
-            click.echo(f"\n참조 오디오와 비교:")
+            click.echo("\n참조 오디오와 비교:")
             click.echo(f"  - SNR: {results['snr']:.2f} dB")
             click.echo(f"  - MSE: {results['mse']:.6f}")
             click.echo(f"  - 스펙트럼 거리: {results['spectral_distance']:.2f}")
@@ -286,7 +285,7 @@ def preview(ctx, target_path, source_paths, algorithm, top_k):
             all_matches.sort(key=lambda m: m.similarity, reverse=True)
             best = all_matches[0]
 
-            click.echo(f"\n최고 매치:")
+            click.echo("\n최고 매치:")
             click.echo(f"  파일: {best.metadata['source_file']}")
             click.echo(f"  유사도: {best.similarity:.3f}")
             click.echo(f"  위치: {best.source_start:.2f}s ~ {best.source_end:.2f}s")

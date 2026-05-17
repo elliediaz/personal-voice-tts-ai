@@ -2,7 +2,6 @@
 Tests for Synthesis Modules
 """
 
-import pytest
 import numpy as np
 
 from core.synthesis.extractor import SegmentExtractor

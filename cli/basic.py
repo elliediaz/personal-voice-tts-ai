@@ -6,7 +6,6 @@ Basic CLI Module
 
 import sys
 from pathlib import Path
-from typing import Optional
 
 import click
 
@@ -14,7 +13,7 @@ from core.audio.io import AudioFile
 from core.audio.analysis import AudioAnalyzer
 from core.audio.metadata import AudioMetadata
 from config import get_config, reload_config
-from utils.logging import setup_logger, get_logger
+from utils.logging import setup_logger
 
 # 로거 초기화
 logger = None
@@ -102,7 +101,7 @@ def info(ctx, file_path, output_json):
             click.echo(f"총 샘플 수: {metadata.num_samples:,}")
 
             if metadata.statistics:
-                click.echo(f"\n=== 통계 정보 ===")
+                click.echo("\n=== 통계 정보 ===")
                 click.echo(f"평균: {metadata.statistics['mean']:.6f}")
                 click.echo(f"표준편차: {metadata.statistics['std']:.6f}")
                 click.echo(f"최소값: {metadata.statistics['min']:.6f}")

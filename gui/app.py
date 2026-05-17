@@ -7,24 +7,20 @@ Main Application
 import sys
 import logging
 from pathlib import Path
-from typing import Optional
 
 from PyQt6.QtWidgets import (
     QApplication,
     QMainWindow,
     QWidget,
     QVBoxLayout,
-    QHBoxLayout,
     QTabWidget,
-    QMenuBar,
-    QMenu,
     QToolBar,
     QStatusBar,
     QMessageBox,
     QFileDialog,
 )
-from PyQt6.QtGui import QAction, QIcon
-from PyQt6.QtCore import Qt, QSettings
+from PyQt6.QtGui import QAction
+from PyQt6.QtCore import QSettings
 
 from gui.panels.synthesis_panel import SynthesisPanel
 from gui.panels.tts_panel import TTSPanel
@@ -129,8 +125,8 @@ class MainWindow(QMainWindow):
         settings_action.triggered.connect(self._on_settings)
         edit_menu.addAction(settings_action)
 
-        # 보기 메뉴
-        view_menu = menubar.addMenu("보기(&V)")
+        # 보기 메뉴 (향후 확장용 플레이스홀더)
+        menubar.addMenu("보기(&V)")
 
         # 도움말 메뉴
         help_menu = menubar.addMenu("도움말(&H)")

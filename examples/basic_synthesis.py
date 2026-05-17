@@ -67,7 +67,7 @@ def main():
 
         print("\n합성 완료!")
         print(f"출력 파일: {output_file}")
-        print(f"\n메타데이터:")
+        print("\n메타데이터:")
         print(f"  - 타겟 길이: {metadata.get('target_duration', 'N/A')}초")
         print(f"  - 출력 길이: {metadata.get('output_duration', 'N/A')}초")
         print(f"  - 사용된 세그먼트 수: {metadata.get('segment_count', 'N/A')}")

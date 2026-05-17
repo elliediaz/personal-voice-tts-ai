@@ -11,7 +11,6 @@ from typing import Dict, Optional, Any
 import json
 
 import numpy as np
-import librosa
 
 from utils.logging import get_logger
 

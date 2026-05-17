@@ -70,7 +70,7 @@ def find(ctx, target_path, source_path, model, pooling, top_k, output, metadata)
     logger = ctx.obj['logger']
 
     try:
-        logger.info(f"AI 기반 유사 세그먼트 검색 시작...")
+        logger.info("AI 기반 유사 세그먼트 검색 시작...")
         logger.info(f"타겟: {target_path}")
         logger.info(f"소스: {source_path}")
         logger.info(f"모델: {model}, 풀링: {pooling}")
@@ -134,7 +134,6 @@ def find(ctx, target_path, source_path, model, pooling, top_k, output, metadata)
 
         # 메타데이터 저장 (옵션)
         if metadata and matches:
-            from core.ai.metadata import AIMetadata
 
             similarities = [m.similarity for m in matches]
             ai_metadata = algo.create_metadata(
@@ -173,7 +172,7 @@ def hybrid(ctx, target_path, source_path, model, traditional, ai_weight, top_k, 
     logger = ctx.obj['logger']
 
     try:
-        logger.info(f"하이브리드 검색 시작...")
+        logger.info("하이브리드 검색 시작...")
         logger.info(f"AI 모델: {model}, 전통적: {traditional}, AI 가중치: {ai_weight}")
 
         # 오디오 로드
@@ -326,7 +325,7 @@ def extract_embedding(ctx, audio_path, model, output):
             audio.data, audio.sample_rate, return_time=True
         )
 
-        click.echo(f"\n임베딩 추출 완료:")
+        click.echo("\n임베딩 추출 완료:")
         click.echo(f"  모델: {model}")
         click.echo(f"  임베딩 차원: {len(embedding)}")
         click.echo(f"  추론 시간: {inference_time:.3f}초")

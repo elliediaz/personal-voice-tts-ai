@@ -44,7 +44,7 @@ class RhythmSimilarity(BaseSimilarityAlgorithm):
         self.use_tempo = use_tempo
         self.use_onset = use_onset
 
-        logger.info(f"RhythmSimilarity 초기화 완료")
+        logger.info("RhythmSimilarity 초기화 완료")
 
     def _extract_rhythm_features(
         self,

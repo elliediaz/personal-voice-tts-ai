@@ -3,7 +3,6 @@ Tests for TTS Modules
 """
 
 import pytest
-from pathlib import Path
 
 from core.tts.base import BaseTTSEngine
 from core.tts.preprocessing import TextPreprocessor

@@ -8,7 +8,7 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
 
 setup(
     name="personal-voice-tts-ai",
-    version="0.9.0",
+    version="1.0.0",
     author="Kim Kyung Min",
     author_email="oswardfish@outlook.kr",
     description="음성 콜라주 및 합성 기반의 고급 TTS 시스템",
@@ -16,7 +16,7 @@ setup(
     long_description_content_type="text/markdown",
     packages=find_packages(exclude=["tests", "tests.*", "docs", "examples"]),
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
         "Topic :: Multimedia :: Sound/Audio :: Analysis",
         "Topic :: Multimedia :: Sound/Audio :: Speech",

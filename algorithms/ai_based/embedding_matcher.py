@@ -9,7 +9,6 @@ from typing import Optional, List
 import time
 
 import numpy as np
-import librosa
 
 from algorithms.base import BaseSimilarityAlgorithm, SimilarityMatch
 from algorithms.ai_based.embeddings import EmbeddingExtractor

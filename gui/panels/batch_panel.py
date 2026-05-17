@@ -23,7 +23,7 @@ from PyQt6.QtWidgets import (
     QListWidget,
     QTextEdit,
 )
-from PyQt6.QtCore import Qt, QThread, pyqtSignal
+from PyQt6.QtCore import QThread, pyqtSignal
 
 logger = logging.getLogger(__name__)
 

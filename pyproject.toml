@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "personal-voice-tts-ai"
-version = "0.9.0"
+version = "1.0.0"
 description = "음성 콜라주 및 합성 기반의 고급 TTS 시스템"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -15,7 +15,7 @@ authors = [
 keywords = ["tts", "audio", "speech", "synthesis", "voice", "ai", "deep-learning"]
 
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
     "Topic :: Multimedia :: Sound/Audio :: Speech",
@@ -27,15 +27,26 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
 ]
 
+# requirements.txt와 동기화된 런타임 의존성
 dependencies = [
-    "numpy>=1.24.0",
+    "numpy>=2.0.0",
     "scipy>=1.10.0",
     "librosa>=0.10.0",
     "soundfile>=0.12.0",
-    "pydub>=0.25.0",
+    "audioread>=3.0.0",
+    "pydub>=0.25.1",
     "PyYAML>=6.0",
-    "click>=8.1.0",
-    "tqdm>=4.65.0",
+    "pydantic>=2.0.0",
+    "click>=8.0.0",
+    "matplotlib>=3.5.0",
+    "python-dotenv>=1.0.0",
+    "tqdm>=4.62.0",
+    "colorlog>=6.6.0",
+    "fastapi>=0.100.0",
+    "uvicorn[standard]>=0.20.0",
+    "python-multipart>=0.0.6",
+    "aiofiles>=23.0.0",
+    "jinja2>=3.0.0",
 ]
 
 [project.optional-dependencies]
@@ -56,8 +67,10 @@ gui = [
 dev = [
     "pytest>=7.3.0",
     "pytest-cov>=4.1.0",
+    "pytest-mock>=3.6.0",
     "black>=23.3.0",
     "flake8>=6.0.0",
+    "ruff>=0.5.0",
     "mypy>=1.3.0",
 ]
 all = [
@@ -112,6 +125,19 @@ include_trailing_comma = true
 force_grid_wrap = 0
 use_parentheses = true
 ensure_newline_before_comments = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+extend-exclude = ["htmlcov", "build", "dist", ".venv"]
+
+[tool.ruff.lint]
+# E501(line-too-long)은 black/line-length가 관리하므로 제외
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+# 테스트의 명시적 불리언 단언(== True/False)은 의도된 표현이므로 허용
+"tests/*" = ["E712"]
 
 [tool.mypy]
 python_version = "3.9"

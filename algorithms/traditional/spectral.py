@@ -56,7 +56,7 @@ class SpectralSimilarity(BaseSimilarityAlgorithm):
         self.contrast_weight = contrast_weight / total_weight
         self.bandwidth_weight = bandwidth_weight / total_weight
 
-        logger.info(f"SpectralSimilarity 초기화 완료")
+        logger.info("SpectralSimilarity 초기화 완료")
 
     def _extract_spectral_features(
         self,

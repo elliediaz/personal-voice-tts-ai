@@ -19,7 +19,7 @@ def get_project_root():
 
 def run_web_server(host: str = "0.0.0.0", port: int = 8000, reload: bool = True):
     """웹 서버 실행"""
-    print(f"[INFO] 웹 서버 시작...")
+    print("[INFO] 웹 서버 시작...")
     print(f"[INFO] 접속 주소: http://localhost:{port}")
 
     try:

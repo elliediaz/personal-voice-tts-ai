@@ -5,7 +5,6 @@ Tempo Adjustment
 """
 
 import logging
-from typing import Optional
 
 import numpy as np
 import librosa
@@ -106,8 +105,7 @@ class TempoAdjuster:
         Returns:
             템포가 조정된 소스 오디오
         """
-        # 길이 비율 계산
-        source_duration = len(source_audio) / sample_rate
+        # 타겟 길이 계산
         target_duration = len(target_audio) / sample_rate
 
         # 템포 조정

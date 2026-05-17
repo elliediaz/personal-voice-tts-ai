@@ -9,7 +9,6 @@ from pathlib import Path
 from typing import List, Dict, Any, Callable, Optional
 import yaml
 
-from core.batch.processor import BatchProcessor
 
 logger = logging.getLogger(__name__)
 

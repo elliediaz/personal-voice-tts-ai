@@ -4,7 +4,7 @@ Algorithm Manager Module
 모든 유사도 알고리즘을 관리하고 통합하는 모듈입니다.
 """
 
-from typing import Dict, List, Optional, Type, Any
+from typing import Dict, List, Optional, Any
 import time
 import numpy as np
 

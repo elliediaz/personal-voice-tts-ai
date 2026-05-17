@@ -11,7 +11,6 @@ from pathlib import Path
 import click
 
 from core.tts.backends import GTTSBackend, Pyttsx3Backend, EdgeTTSBackend
-from core.tts.preprocessing import TextPreprocessor
 from core.tts.pipeline import TTSPipeline
 from core.tts.batch import BatchTTSProcessor
 from algorithms.traditional.mfcc import MFCCSimilarity
@@ -166,7 +165,7 @@ def collage(ctx, text, source_paths, output, backend, algorithm, language, metad
             output_path=Path(output),
         )
 
-        click.echo(f"\n콜라주 완료!")
+        click.echo("\n콜라주 완료!")
         click.echo(f"출력 파일: {output}")
         click.echo(f"처리 시간: {collage_metadata['processing_time']:.2f}초")
         click.echo(f"최고 유사도: {collage_metadata['similarity']:.3f}")
@@ -237,7 +236,7 @@ def batch(ctx, input_file, source_paths, output_dir, backend, algorithm, languag
 
         # 결과 요약
         success_count = sum(1 for r in results if r.get("success", False))
-        click.echo(f"\n배치 처리 완료!")
+        click.echo("\n배치 처리 완료!")
         click.echo(f"성공: {success_count}/{len(results)}")
         click.echo(f"출력 디렉토리: {output_dir}")
 

@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Optional
 
 from PyQt6.QtWidgets import QApplication
-from PyQt6.QtGui import QFontDatabase, QFont
+from PyQt6.QtGui import QFontDatabase
 
 logger = logging.getLogger(__name__)
 

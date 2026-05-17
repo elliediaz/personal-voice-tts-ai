@@ -5,7 +5,6 @@ Segment Matching Module
 """
 
 from typing import List, Optional
-import numpy as np
 
 from algorithms.base import SimilarityMatch
 from utils.logging import get_logger
@@ -182,11 +181,14 @@ class SegmentMatcher:
             List[SimilarityMatch]: 순위화된 매칭 결과
         """
         if ranking_method == 'similarity':
-            key_func = lambda x: x.similarity
+            def key_func(x):
+                return x.similarity
         elif ranking_method == 'confidence':
-            key_func = lambda x: x.confidence
+            def key_func(x):
+                return x.confidence
         elif ranking_method == 'combined':
-            key_func = lambda x: (x.similarity + x.confidence) / 2.0
+            def key_func(x):
+                return (x.similarity + x.confidence) / 2.0
         else:
             raise ValueError(f"지원하지 않는 순위화 방법: {ranking_method}")
 

@@ -5,7 +5,7 @@ Job Queue
 """
 
 import logging
-from typing import List, Dict, Any, Callable, Optional
+from typing import List, Any, Callable, Optional
 from dataclasses import dataclass, field
 from datetime import datetime
 import json

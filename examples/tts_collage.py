@@ -65,7 +65,7 @@ def main():
 
         print("\n처리 완료!")
         print(f"출력 파일: {output_file}")
-        print(f"\n메타데이터:")
+        print("\n메타데이터:")
         print(f"  - 입력 텍스트 길이: {len(text)}자")
         print(f"  - TTS 오디오 길이: {metadata.get('tts_duration', 'N/A')}초")
         print(f"  - 최종 출력 길이: {metadata.get('output_duration', 'N/A')}초")

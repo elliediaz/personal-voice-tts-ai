@@ -44,7 +44,7 @@ class EnergySimilarity(BaseSimilarityAlgorithm):
         self.hop_length = hop_length
         self.normalize_energy = normalize_energy
 
-        logger.info(f"EnergySimilarity 초기화 완료")
+        logger.info("EnergySimilarity 초기화 완료")
 
     def _extract_energy(
         self,

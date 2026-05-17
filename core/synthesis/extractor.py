@@ -5,11 +5,10 @@ Segment Extractor
 """
 
 import logging
-from typing import Optional, Tuple
+from typing import Tuple
 from pathlib import Path
 
 import numpy as np
-import librosa
 
 from algorithms.base import SimilarityMatch
 from core.audio.io import AudioFile
