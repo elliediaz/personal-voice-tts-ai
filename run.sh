@@ -129,6 +129,157 @@ show_banner() {
 }
 
 # ============================================================================
+# 버전 정보 (venv 불필요 - 순수)
+# ============================================================================
+PVTTS_VERSION="1.0.0"
+show_version() {
+    local git_ver
+    git_ver="$(git -C "$PROJECT_DIR" describe --tags --always 2>/dev/null || echo "")"
+    if [ -n "$git_ver" ]; then
+        echo -e "${BOLD}Personal Voice TTS AI${NC} v${PVTTS_VERSION} (${git_ver})"
+    else
+        echo -e "${BOLD}Personal Voice TTS AI${NC} v${PVTTS_VERSION}"
+    fi
+}
+
+# ============================================================================
+# 브라우저 자동 오픈 (--open) — 백그라운드, 실패 무시
+# ============================================================================
+open_browser() {
+    local url="$1"
+    (
+        sleep 2
+        if command -v xdg-open &> /dev/null; then xdg-open "$url"
+        elif command -v open &> /dev/null; then open "$url"
+        elif [ -n "${BROWSER:-}" ]; then "$BROWSER" "$url"
+        fi
+    ) > /dev/null 2>&1 &
+}
+
+# ============================================================================
+# 터널링 (cloudflared / localhost.run) — 부재 시 친절히 안내 후 graceful return
+# ============================================================================
+TUNNEL_PID=""
+TUNNEL_LOG=""
+cleanup_tunnel() {
+    if [ -n "$TUNNEL_PID" ] && kill -0 "$TUNNEL_PID" 2>/dev/null; then
+        kill "$TUNNEL_PID" 2>/dev/null
+        sleep 1
+        kill -9 "$TUNNEL_PID" 2>/dev/null || true
+    fi
+    [ -n "$TUNNEL_LOG" ] && [ -f "$TUNNEL_LOG" ] && rm -f "$TUNNEL_LOG"
+}
+
+gen_token() {
+    if command -v openssl &> /dev/null; then
+        openssl rand -hex 16
+    else
+        head -c16 /dev/urandom | od -An -tx1 | tr -d ' \n'
+    fi
+}
+
+start_tunnel() {
+    # $1=provider $2=port
+    local provider="$1" port="$2" url=""
+    TUNNEL_LOG="$(mktemp -t pvtts-tunnel.XXXXXX.log)"
+    case "$provider" in
+        cloudflared|cf)
+            if ! command -v cloudflared &> /dev/null; then
+                msg_error "cloudflared가 설치되어 있지 않습니다."
+                msg_info "설치(linux-arm64): https://github.com/cloudflare/cloudflared/releases"
+                msg_info "또는 '--tunnel localhost.run' 을 사용하세요."
+                return 1
+            fi
+            nohup cloudflared tunnel --no-autoupdate --url "http://localhost:${port}" \
+                > "$TUNNEL_LOG" 2>&1 &
+            TUNNEL_PID=$!
+            for _ in $(seq 1 40); do
+                kill -0 "$TUNNEL_PID" 2>/dev/null || { msg_error "cloudflared가 종료되었습니다."; tail -10 "$TUNNEL_LOG" >&2; return 1; }
+                url=$(grep -oE 'https://[a-zA-Z0-9-]+\.trycloudflare\.com' "$TUNNEL_LOG" 2>/dev/null | head -1)
+                [ -n "$url" ] && break
+                sleep 0.5
+            done
+            ;;
+        localhost.run|lhr)
+            if ! command -v ssh &> /dev/null; then
+                msg_error "ssh가 필요합니다 (localhost.run 터널)."
+                return 1
+            fi
+            nohup ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -o ExitOnForwardFailure=yes \
+                -NTR "80:localhost:${port}" nokey@localhost.run > "$TUNNEL_LOG" 2>&1 &
+            TUNNEL_PID=$!
+            for _ in $(seq 1 60); do
+                kill -0 "$TUNNEL_PID" 2>/dev/null || { msg_error "ssh 터널이 종료되었습니다."; tail -10 "$TUNNEL_LOG" >&2; return 1; }
+                url=$(grep -oE 'https://[a-zA-Z0-9-]+\.(lhr\.life|lhrtunnel\.link)' "$TUNNEL_LOG" 2>/dev/null | head -1)
+                [ -n "$url" ] && break
+                sleep 0.5
+            done
+            ;;
+        *)
+            msg_error "알 수 없는 터널 공급자: $provider (cloudflared|localhost.run)"
+            return 1
+            ;;
+    esac
+    if [ -z "$url" ]; then
+        msg_error "터널 URL 획득 실패"
+        tail -10 "$TUNNEL_LOG" >&2
+        return 1
+    fi
+    echo ""
+    echo -e "${CYAN}┌── 터널 활성화 ───────────────────────────────┐${NC}"
+    echo -e "  공개 URL: ${GREEN}${url}${NC}"
+    echo -e "  로컬 포트: ${port} | 로그: ${TUNNEL_LOG}"
+    echo -e "${CYAN}└──────────────────────────────────────────────┘${NC}"
+    msg_warn "외부에 공개됩니다. 노출에 주의하세요."
+    echo ""
+    TUNNEL_URL="$url"
+}
+
+# ============================================================================
+# 데몬 (백그라운드 웹 서버) PID 파일 기반 — web --daemon / stop / restart / logs
+# ============================================================================
+RUN_DIR="$PROJECT_DIR/.run"
+PID_FILE="$RUN_DIR/web.pid"
+LOG_FILE="$RUN_DIR/web.log"
+
+daemon_is_running() {
+    [ -f "$PID_FILE" ] && kill -0 "$(cat "$PID_FILE" 2>/dev/null)" 2>/dev/null
+}
+
+daemon_status() {
+    if daemon_is_running; then
+        msg_success "웹 데몬 실행 중 (PID $(cat "$PID_FILE"))"
+        msg_info "로그: $LOG_FILE"
+    else
+        msg_warn "웹 데몬이 실행 중이 아닙니다."
+    fi
+}
+
+daemon_stop() {
+    if ! daemon_is_running; then
+        msg_warn "웹 데몬이 실행 중이 아닙니다."
+        rm -f "$PID_FILE"
+        return 0
+    fi
+    local pid
+    pid="$(cat "$PID_FILE")"
+    msg_info "웹 데몬 종료 중 (PID $pid)..."
+    kill "$pid" 2>/dev/null || true
+    sleep 1
+    kill -0 "$pid" 2>/dev/null && kill -9 "$pid" 2>/dev/null || true
+    rm -f "$PID_FILE"
+    msg_success "웹 데몬 종료됨"
+}
+
+daemon_logs() {
+    if [ ! -f "$LOG_FILE" ]; then
+        msg_warn "로그 파일이 없습니다: $LOG_FILE"
+        return 0
+    fi
+    tail -f "$LOG_FILE"
+}
+
+# ============================================================================
 # Python 확인
 # ============================================================================
 check_python() {
@@ -522,6 +673,7 @@ run_web() {
     shift || true
     local host="$PVTTS_HOST"
     local port="$PVTTS_PORT"
+    local do_tunnel="" do_open=0 daemon=0
 
     while [[ $# -gt 0 ]]; do
         case $1 in
@@ -533,11 +685,56 @@ run_web() {
                 port="$2"
                 shift 2
                 ;;
+            --tunnel)
+                if [ -n "${2:-}" ] && [[ "${2:-}" != --* ]]; then do_tunnel="$2"; shift 2; else do_tunnel="cloudflared"; shift; fi
+                ;;
+            --tunnel=*)
+                do_tunnel="${1#*=}"; shift
+                ;;
+            --open)
+                do_open=1; shift
+                ;;
+            --daemon|-d)
+                daemon=1; shift
+                ;;
             *)
                 shift
                 ;;
         esac
     done
+
+    # 백그라운드 데몬 모드: PID 파일 기반 (stop/restart/logs 로 제어)
+    if [ "$daemon" -eq 1 ]; then
+        if daemon_is_running; then
+            msg_warn "웹 데몬이 이미 실행 중입니다 (PID $(cat "$PID_FILE"))"
+            return 0
+        fi
+        [ -n "$do_tunnel" ] && msg_warn "데몬 모드에서는 --tunnel 을 지원하지 않습니다. 포그라운드 './run.sh web --tunnel ...' 를 사용하세요."
+        mkdir -p "$RUN_DIR"
+        local rl=""
+        [ "$PVTTS_DEBUG" = "1" ] && rl="--log-level debug"
+        nohup $PYTHON -m uvicorn web.app:app --host "$host" --port "$port" $rl > "$LOG_FILE" 2>&1 &
+        echo $! > "$PID_FILE"
+        sleep 1
+        if daemon_is_running; then
+            msg_success "웹 데몬 시작됨 (PID $(cat "$PID_FILE")) — http://localhost:$port"
+            msg_info "로그: ./run.sh logs   |   종료: ./run.sh stop"
+            [ "$do_open" -eq 1 ] && open_browser "http://localhost:$port"
+        else
+            msg_error "웹 데몬 시작 실패"
+            [ -f "$LOG_FILE" ] && tail -20 "$LOG_FILE" >&2
+            rm -f "$PID_FILE"
+            return 1
+        fi
+        return 0
+    fi
+
+    # 포그라운드 실행 (+ 선택적 터널/브라우저 오픈)
+    if [ -n "$do_tunnel" ]; then
+        trap cleanup_tunnel EXIT INT TERM
+        start_tunnel "$do_tunnel" "$port" || msg_warn "터널 시작 실패 — 로컬에서만 접근 가능합니다."
+    fi
+    [ "$do_open" -eq 1 ] && open_browser "http://localhost:$port"
 
     echo ""
     msg_info "웹 서버 시작 중..."
@@ -956,6 +1153,11 @@ show_help() {
     echo "  ./run.sh setup                     # 환경 수동 설정"
     echo "  ./run.sh web                       # 웹 서버 실행 (기본 포트)"
     echo "  ./run.sh web --port 3000           # 웹 서버 (포트 3000)"
+    echo "  ./run.sh web --open                # 실행 후 브라우저 자동 오픈"
+    echo "  ./run.sh web --tunnel              # cloudflared 터널로 외부 노출"
+    echo "  ./run.sh web --tunnel localhost.run # SSH 터널(localhost.run)로 외부 노출"
+    echo "  ./run.sh web --daemon              # 백그라운드 데몬으로 실행"
+    echo "  ./run.sh stop|restart|logs         # 데몬 종료/재시작/로그"
     echo "  ./run.sh gui                       # GUI 실행"
     echo "  ./run.sh cli basic info audio.wav  # CLI 오디오 정보"
     echo "  ./run.sh test -v                   # 상세 테스트"
@@ -1033,6 +1235,14 @@ main() {
             reset_environment
             exit 0
             ;;
+        stop)
+            daemon_stop
+            exit 0
+            ;;
+        logs)
+            daemon_logs
+            exit 0
+            ;;
     esac
 
     # Python 필요한 명령어 - 환경 확인 및 준비
@@ -1041,6 +1251,11 @@ main() {
     case $COMMAND in
         web)
             run_web "$@"
+            ;;
+        restart)
+            daemon_stop
+            sleep 1
+            run_web web --daemon
             ;;
         gui)
             run_gui
